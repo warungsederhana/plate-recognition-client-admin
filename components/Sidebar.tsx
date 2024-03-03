@@ -34,7 +34,7 @@ const Sidebar = () => {
   const router = useRouter();
 
   return (
-    <>
+    <React.Fragment>
       <IconButton variant="text" size="lg" onClick={openDrawer} placeholder={undefined}>
         {isDrawerOpen ? (
           <XMarkIcon className="h-7 w-7 hover:cursor-pointer" strokeWidth={1.5} />
@@ -100,7 +100,7 @@ const Sidebar = () => {
           </ListItem>
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 };
 

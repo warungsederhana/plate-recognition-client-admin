@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-neutrals-100`}>
+      <body className={`${inter.className} bg-neutrals-100 w-full min-h-screen`}>
         <ToastContainer />
         <main className="relative overflow-hidden">{children}</main>
       </body>
