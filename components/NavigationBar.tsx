@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Navbar, Collapse, Typography, IconButton } from "@material-tailwind/react";
 import {
   Bars3Icon,
@@ -25,9 +26,7 @@ function NavList() {
           className="p-1 font-medium block lg:hidden"
           placeholder={undefined}
         >
-          <a href="#" className="flex items-center transition-colors">
-            Profile
-          </a>
+          Profile
         </Typography>
       </div>
       <div className="flex flex-row gap-2 items-center">
@@ -45,9 +44,7 @@ function NavList() {
           className="p-1 font-medium block lg:hidden"
           placeholder={undefined}
         >
-          <a href="#" className="flex items-center transition-colors">
-            Logout
-          </a>
+          Logout
         </Typography>
       </div>
     </ul>
@@ -76,18 +73,19 @@ function NavigationBar() {
     >
       <div className="flex items-center justify-between text-blue-gray-900">
         <div className="flex flex-row-reverse gap-2 lg:w-auto lg:justify-normal lg:flex-row items-center">
-          <div className="flex flex-row items-center justify-center lg:mr-8">
-            <Image src={"/img/app-logo.png"} alt={""} width={50} height={50} />
-            <Typography
-              as="a"
-              href="#"
-              variant="h4"
-              className="cursor-pointer py-1.5 lg:mr-4"
-              placeholder={undefined}
-            >
-              Plate Recognition
-            </Typography>
-          </div>
+          <Link href="/dashboard">
+            <div className="flex flex-row items-center justify-center lg:mr-8">
+              <Image src={"/img/app-logo.png"} alt={""} width={50} height={50} />
+              <Typography
+                variant="h4"
+                className="cursor-pointer py-1.5 lg:mr-4"
+                placeholder={undefined}
+              >
+                Plate Recognition
+              </Typography>
+            </div>
+          </Link>
+
           <Sidebar />
         </div>
 
