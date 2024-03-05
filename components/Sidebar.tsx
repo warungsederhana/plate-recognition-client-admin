@@ -56,24 +56,28 @@ const Sidebar = () => {
           Home
         </Typography>
         <List placeholder={undefined}>
-          <ListItem placeholder={undefined}>
-            <ListItemPrefix placeholder={undefined}>
-              <HomeIcon className="h-5 w-5" strokeWidth={1.5} />
-            </ListItemPrefix>
-            Dashboard
-          </ListItem>
+          <Link href={"/dashboard"}>
+            <ListItem placeholder={undefined}>
+              <ListItemPrefix placeholder={undefined}>
+                <HomeIcon className="h-5 w-5" strokeWidth={1.5} />
+              </ListItemPrefix>
+              Dashboard
+            </ListItem>
+          </Link>
         </List>
 
         <Typography className="px-4 pt-4" variant="h6" color="blue-gray" placeholder={undefined}>
           Data
         </Typography>
         <List placeholder={undefined}>
-          <ListItem placeholder={undefined}>
-            <ListItemPrefix placeholder={undefined}>
-              <FlagIcon className="h-5 w-5" strokeWidth={1.5} />
-            </ListItemPrefix>
-            Negara
-          </ListItem>
+          <Link href={"/dashboard/data/negara"}>
+            <ListItem placeholder={undefined}>
+              <ListItemPrefix placeholder={undefined}>
+                <FlagIcon className="h-5 w-5" strokeWidth={1.5} />
+              </ListItemPrefix>
+              Negara
+            </ListItem>
+          </Link>
           <ListItem placeholder={undefined}>
             <ListItemPrefix placeholder={undefined}>
               <CIcon icon={cilCarAlt} className="h-5 w-5" />
