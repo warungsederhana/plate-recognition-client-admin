@@ -19,28 +19,33 @@ const DashboardTable = (props: DashboardTableProps) => {
         </Typography>
       </CardHeader>
 
-      <CardBody placeholder={undefined} className="px-0">
+      <CardBody placeholder={undefined} className="overflow-scroll px-0">
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-              {TABLE_HEAD.map((head) => (
-                <th key={head} className="border-b border-white bg-primary-500 p-4">
-                  <Typography
-                    variant="small"
-                    color="white"
-                    className="font-normal leading-none opacity-70"
-                    placeholder={undefined}
-                  >
-                    {head}
-                  </Typography>
-                </th>
-              ))}
+              {TABLE_HEAD.map((head, index) => {
+                const isLast = index === TABLE_HEAD.length - 1;
+                const classes = isLast
+                  ? "py-4 px-8 bg-primary-500 border-b border-solid border-neutrals-300"
+                  : "py-4 px-8 bg-primary-500 border-r border-b border-solid border-neutrals-300";
+                return (
+                  <th key={head} className={`${classes}`}>
+                    <Typography
+                      variant="small"
+                      color="white"
+                      className="font-normal leading-none"
+                      placeholder={undefined}
+                    >
+                      {head}
+                    </Typography>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
             {TABLE_ROWS.map((row, index) => {
-              const isLast = index === TABLE_ROWS.length - 1;
-              const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+              const classes = "py-4 px-8 border-r border-solid border-neutrals-300";
 
               return (
                 <tr key={index}>

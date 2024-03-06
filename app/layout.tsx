@@ -20,7 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-neutrals-100 w-full min-h-screen`}>
         <ToastContainer />
-        <main className="relative overflow-hidden">{children}</main>
+        <main className="relative">{children}</main>
+        {/* tadi ada class overflow-hidden diatas */}
       </body>
     </html>
   );

@@ -4,24 +4,23 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import DataTable from "../../../../../components/DataTable";
 
-const DataNegaraPage = () => {
-  const [dataNegara, setDataNegara] = useState<any[]>([]);
+const DataMerkKendaraanPage = () => {
+  const [dataMerkKendaraan, setDataMerkKendaraan] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
   const [size, setSize] = useState<number>(0);
   const router = useRouter();
 
-  const handleSearch = (nama_negara: string) => {
-    setSearch(nama_negara);
+  const handleSearch = (nama_merk: string) => {
+    setSearch(nama_merk);
   };
 
   const handleDetail = (uid: string) => {
-    router.push(`/dashboard/data/negara/${uid}`);
+    router.push(`/dashboard/data/merk-kendaraan/${uid}`);
   };
 
   useEffect(() => {
-    const fetchDataNegara = async () => {
-      // Menambahkan query pencarian ke URL
-      const res = await axios.get(`http://localhost:3344/api/negara-asal/?nama_negara=${search}`);
+    const fetchDataMerkKendaraan = async () => {
+      const res = await axios.get(`http://localhost:3344/api/merk-kendaraan/?nama_merk=${search}`);
       setSize(res.data.size);
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
@@ -29,19 +28,17 @@ const DataNegaraPage = () => {
         return item;
       });
       console.log(data);
-      setDataNegara([...data]);
+      setDataMerkKendaraan([...data]);
     };
 
-    // Memanggil fetchDataNegara setiap kali nilai 'search' berubah
-    fetchDataNegara();
-  }, [search]); // Tambahkan 'search' sebagai dependency
-
+    fetchDataMerkKendaraan();
+  }, [search]);
   return (
     <>
       <div className="pt-6 px-16">
         <DataTable
-          title={"Negara"}
-          data={dataNegara}
+          title={"Merk Kendaraan"}
+          data={dataMerkKendaraan}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
         />
@@ -50,4 +47,4 @@ const DataNegaraPage = () => {
   );
 };
 
-export default DataNegaraPage;
+export default DataMerkKendaraanPage;

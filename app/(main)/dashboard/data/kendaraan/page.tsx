@@ -4,24 +4,23 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import DataTable from "../../../../../components/DataTable";
 
-const DataNegaraPage = () => {
-  const [dataNegara, setDataNegara] = useState<any[]>([]);
+const KendaraanPage = () => {
+  const [dataKendaraan, setDataKendaraan] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
   const [size, setSize] = useState<number>(0);
   const router = useRouter();
 
-  const handleSearch = (nama_negara: string) => {
-    setSearch(nama_negara);
+  const handleSearch = (nama_kendaraan: string) => {
+    setSearch(nama_kendaraan);
   };
 
   const handleDetail = (uid: string) => {
-    router.push(`/dashboard/data/negara/${uid}`);
+    router.push(`/dashboard/data/kendaraan/${uid}`);
   };
 
   useEffect(() => {
-    const fetchDataNegara = async () => {
-      // Menambahkan query pencarian ke URL
-      const res = await axios.get(`http://localhost:3344/api/negara-asal/?nama_negara=${search}`);
+    const fetchDataKendaraan = async () => {
+      const res = await axios.get(`http://localhost:3344/api/kendaraan/?nama_kendaraan=${search}`);
       setSize(res.data.size);
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
@@ -29,19 +28,18 @@ const DataNegaraPage = () => {
         return item;
       });
       console.log(data);
-      setDataNegara([...data]);
+      setDataKendaraan([...data]);
     };
 
-    // Memanggil fetchDataNegara setiap kali nilai 'search' berubah
-    fetchDataNegara();
-  }, [search]); // Tambahkan 'search' sebagai dependency
+    fetchDataKendaraan();
+  }, [search]);
 
   return (
     <>
       <div className="pt-6 px-16">
         <DataTable
-          title={"Negara"}
-          data={dataNegara}
+          title={"Kendaraan"}
+          data={dataKendaraan}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
         />
@@ -50,4 +48,4 @@ const DataNegaraPage = () => {
   );
 };
 
-export default DataNegaraPage;
+export default KendaraanPage;
