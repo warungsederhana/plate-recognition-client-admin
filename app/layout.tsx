@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-neutrals-100 w-full min-h-screen`}>
+      <body className={`${inter.className} bg-[url('/img/memphis-bg.jpg')] w-full min-h-screen`}>
         <ToastContainer />
         <main className="relative">{children}</main>
         {/* tadi ada class overflow-hidden diatas */}

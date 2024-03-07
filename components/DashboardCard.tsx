@@ -9,12 +9,19 @@ interface DashboardCardProps {
 
 const DashboardCard = (props: DashboardCardProps) => {
   return (
-    <Card className="mt-6 w-96" placeholder={undefined}>
+    // bg-gradient-to-tr from-primary-500 to-primary-400
+    <Card
+      className="mt-6 w-96 bg-gradient-to-tr from-primary-500 to-primary-400"
+      variant="gradient"
+      placeholder={undefined}
+    >
       <CardBody placeholder={undefined}>
-        <Typography variant="h3" color="blue-gray" className="mb-2" placeholder={undefined}>
+        <Typography variant="h3" color="white" className="mb-2" placeholder={undefined}>
           {props.size}
         </Typography>
-        <Typography placeholder={undefined}>{props.title}</Typography>
+        <Typography color="white" placeholder={undefined}>
+          {props.title}
+        </Typography>
       </CardBody>
       <CardFooter className="pt-0" placeholder={undefined} children={undefined}></CardFooter>
     </Card>

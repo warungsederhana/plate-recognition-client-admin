@@ -26,8 +26,8 @@ const DashboardTable = (props: DashboardTableProps) => {
               {TABLE_HEAD.map((head, index) => {
                 const isLast = index === TABLE_HEAD.length - 1;
                 const classes = isLast
-                  ? "py-4 px-8 bg-primary-500 border-b border-solid border-neutrals-300"
-                  : "py-4 px-8 bg-primary-500 border-r border-b border-solid border-neutrals-300";
+                  ? "py-4 px-8 bg-gradient-to-tr from-primary-500 to-primary-400 border-b border-solid border-neutrals-300"
+                  : "py-4 px-8 bg-gradient-to-tr from-primary-500 to-primary-400 border-r border-b border-solid border-neutrals-300";
                 return (
                   <th key={head} className={`${classes}`}>
                     <Typography
