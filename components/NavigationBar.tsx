@@ -68,7 +68,7 @@ function NavigationBar() {
     <Navbar
       variant="gradient"
       fullWidth={true}
-      className="mx-auto lg:px-16 py-3"
+      className="mx-auto lg:px-16 py-3 z-[1000] h-full sticky top-0"
       placeholder={undefined}
     >
       <div className="flex items-center justify-between text-blue-gray-900">

@@ -4,24 +4,25 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import DataTable from "../../../../../components/DataTable";
 
-const DataNegaraPage = () => {
-  const [dataNegara, setDataNegara] = useState<any[]>([]);
+const TypeKendaraanPage = () => {
+  const [dataTypeKendaraan, setDataTypeKendaraan] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
   const [size, setSize] = useState<number>(0);
   const router = useRouter();
 
-  const handleSearch = (nama_negara: string) => {
-    setSearch(nama_negara);
+  const handleSearch = (nama_type: string) => {
+    setSearch(nama_type);
   };
 
   const handleDetail = (uid: string) => {
-    router.push(`/dashboard/data/negara/${uid}`);
+    router.push(`/dashboard/data/type-kendaraan/${uid}`);
   };
 
   useEffect(() => {
-    const fetchDataNegara = async () => {
-      // Menambahkan query pencarian ke URL
-      const res = await axios.get(`http://localhost:3344/api/negara-asal/?nama_negara=${search}`);
+    const fetchDataTypeKendaraan = async () => {
+      const res = await axios.get(
+        `http://localhost:3344/api/type-kendaraan/?nama_type_kendaraan=${search}`
+      );
       setSize(res.data.size);
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
@@ -29,19 +30,17 @@ const DataNegaraPage = () => {
         return item;
       });
       console.log(data);
-      setDataNegara([...data]);
+      setDataTypeKendaraan([...data]);
     };
 
-    // Memanggil fetchDataNegara setiap kali nilai 'search' berubah
-    fetchDataNegara();
-  }, [search]); // Tambahkan 'search' sebagai dependency
-
+    fetchDataTypeKendaraan();
+  }, [search]);
   return (
     <>
       <div className="pt-6 px-16">
         <DataTable
-          title={"Negara"}
-          data={dataNegara}
+          title={"Type Kendaraan"}
+          data={dataTypeKendaraan}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
         />
@@ -50,4 +49,4 @@ const DataNegaraPage = () => {
   );
 };
 
-export default DataNegaraPage;
+export default TypeKendaraanPage;

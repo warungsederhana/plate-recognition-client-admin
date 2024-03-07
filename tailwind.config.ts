@@ -17,6 +17,7 @@ module.exports = withMT({
       },
       colors: {
         neutrals: {
+          50: "#F9FAFB",
           100: "#F2F4F7",
           200: "#EAECF0",
           300: "#D0D5DD",

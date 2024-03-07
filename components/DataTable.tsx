@@ -22,11 +22,15 @@ interface DataTableProps {
   title: string;
   data: any[];
   handleSearch: (nama_negara: string) => void;
+  handleDetail: (uid: string) => void;
 }
 
 const DataTable = (props: DataTableProps) => {
   const [search, setSearch] = React.useState<string>("");
-  const keys = props.data.length > 0 ? Object.keys(props.data[0]) : ["TIDAK ADA DATA"]; // Ubah bagian ini sesuai dengan nama kolom yang diinginkan
+  const keys =
+    props.data.length > 0
+      ? Object.keys(props.data[0]).filter((key) => key !== "uid")
+      : ["TIDAK ADA DATA"];
   const TABLE_HEAD = [...keys.map((key) => key.replace(/_/g, " ").toUpperCase()), "ACTIONS"];
   const TABLE_ROWS = props.data;
 
@@ -38,6 +42,10 @@ const DataTable = (props: DataTableProps) => {
     if (e.key === "Enter") {
       handleSearchChange();
     }
+  };
+
+  const handleDetail = (uid: string) => {
+    props.handleDetail(uid);
   };
 
   return (
@@ -78,25 +86,30 @@ const DataTable = (props: DataTableProps) => {
         <table className="w-full max-h-screen min-w-max table-auto text-left">
           <thead>
             <tr>
-              {TABLE_HEAD.map((head) => (
-                <th key={head} className="sticky top-0 z-50 bg-blue-gray-50 p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-100 pt-[-1px]"
-                    placeholder={undefined}
-                  >
-                    {head}
-                  </Typography>
-                </th>
-              ))}
+              {TABLE_HEAD.map((head, index) => {
+                const isLast = index === TABLE_HEAD.length - 1;
+                const classes = isLast
+                  ? "py-4 px-8 bg-gradient-to-tr from-primary-500 to-primary-400 border-b border-solid border-neutrals-300"
+                  : "py-4 px-8 bg-gradient-to-tr from-primary-500 to-primary-400 border-r border-b border-solid border-neutrals-300";
+                return (
+                  <th key={head} className={`sticky top-0 z-50 ${classes}`}>
+                    <Typography
+                      variant="small"
+                      color="white"
+                      className="font-normal leading-none opacity-100 pt-[-1px]"
+                      placeholder={undefined}
+                    >
+                      {head}
+                    </Typography>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
             {TABLE_ROWS.length > 0 ? (
               TABLE_ROWS.map((row, index) => {
-                const isLast = index === TABLE_ROWS.length - 1;
-                const classes = isLast ? "p-4" : "p-4";
+                const classes = "py-4 px-8 border-r border-solid border-neutrals-300";
 
                 return (
                   <tr key={index}>
@@ -108,13 +121,17 @@ const DataTable = (props: DataTableProps) => {
                           className="font-normal"
                           placeholder={undefined}
                         >
-                          {row[key]}
+                          {row[key] ? row[key].toString() : "-"}
                         </Typography>
                       </td>
                     ))}
-                    <td className={`${classes} flex flex-row gap-2`}>
+                    <td className={`py-4 px-8 flex flex-row gap-2`}>
                       <Tooltip content={`Detail ${props.title.toLocaleLowerCase()}`}>
-                        <IconButton variant="text" placeholder={undefined}>
+                        <IconButton
+                          onClick={(e) => handleDetail(row["uid"])}
+                          variant="text"
+                          placeholder={undefined}
+                        >
                           <MagnifyingGlassIcon className="h-5 w-5 text-info-500" />
                         </IconButton>
                       </Tooltip>

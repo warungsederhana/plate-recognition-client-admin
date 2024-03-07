@@ -49,7 +49,7 @@ const Sidebar = () => {
         placeholder={undefined}
         open={isDrawerOpen}
         onClose={closeDrawer}
-        className="min-h-screen"
+        className="h-full min-h-screen"
         size={300}
       >
         <Typography className="px-4 pt-4" variant="h6" color="blue-gray" placeholder={undefined}>
@@ -78,30 +78,38 @@ const Sidebar = () => {
               Negara
             </ListItem>
           </Link>
-          <ListItem placeholder={undefined}>
-            <ListItemPrefix placeholder={undefined}>
-              <CIcon icon={cilCarAlt} className="h-5 w-5" />
-            </ListItemPrefix>
-            Kendaraan
-          </ListItem>
-          <ListItem placeholder={undefined}>
-            <ListItemPrefix placeholder={undefined}>
-              <WrenchIcon className="h-5 w-5" strokeWidth={1.5} />
-            </ListItemPrefix>
-            Merk Kendaraan
-          </ListItem>
-          <ListItem placeholder={undefined}>
-            <ListItemPrefix placeholder={undefined}>
-              <Cog6ToothIcon className="h-5 w-5" strokeWidth={1.5} />
-            </ListItemPrefix>
-            Type Kendaraan
-          </ListItem>
-          <ListItem placeholder={undefined}>
-            <ListItemPrefix placeholder={undefined}>
-              <Cog8ToothIcon className="h-5 w-5" strokeWidth={1.5} />
-            </ListItemPrefix>
-            Jenis Kendaraan
-          </ListItem>
+          <Link href={"/dashboard/data/kendaraan"}>
+            <ListItem placeholder={undefined}>
+              <ListItemPrefix placeholder={undefined}>
+                <CIcon icon={cilCarAlt} className="h-5 w-5" />
+              </ListItemPrefix>
+              Kendaraan
+            </ListItem>
+          </Link>
+          <Link href={"/dashboard/data/merk-kendaraan"}>
+            <ListItem placeholder={undefined}>
+              <ListItemPrefix placeholder={undefined}>
+                <WrenchIcon className="h-5 w-5" strokeWidth={1.5} />
+              </ListItemPrefix>
+              Merk Kendaraan
+            </ListItem>
+          </Link>
+          <Link href={"/dashboard/data/type-kendaraan"}>
+            <ListItem placeholder={undefined}>
+              <ListItemPrefix placeholder={undefined}>
+                <Cog6ToothIcon className="h-5 w-5" strokeWidth={1.5} />
+              </ListItemPrefix>
+              Type Kendaraan
+            </ListItem>
+          </Link>
+          <Link href={"/dashboard/data/jenis-kendaraan"}>
+            <ListItem placeholder={undefined}>
+              <ListItemPrefix placeholder={undefined}>
+                <Cog8ToothIcon className="h-5 w-5" strokeWidth={1.5} />
+              </ListItemPrefix>
+              Jenis Kendaraan
+            </ListItem>
+          </Link>
         </List>
       </Drawer>
     </React.Fragment>
