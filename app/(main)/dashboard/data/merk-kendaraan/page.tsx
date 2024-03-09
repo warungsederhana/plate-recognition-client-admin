@@ -18,6 +18,16 @@ const DataMerkKendaraanPage = () => {
     router.push(`/dashboard/data/merk-kendaraan/${uid}`);
   };
 
+  const handleDelete = async (uid: string) => {
+    try {
+      await axios.delete(`http://localhost:3344/api/merk-kendaraan/${uid}`);
+      const data = dataMerkKendaraan.filter((item) => item.uid !== uid);
+      setDataMerkKendaraan(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchDataMerkKendaraan = async () => {
       const res = await axios.get(`http://localhost:3344/api/merk-kendaraan/?nama_merk=${search}`);
@@ -41,6 +51,7 @@ const DataMerkKendaraanPage = () => {
           data={dataMerkKendaraan}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
+          handleDelete={handleDelete}
         />
       </div>
     </>

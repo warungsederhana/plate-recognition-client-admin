@@ -18,6 +18,9 @@ import {
   CardFooter,
   IconButton,
   Tooltip,
+  Dialog,
+  DialogBody,
+  DialogFooter,
 } from "@material-tailwind/react";
 
 interface DataTableProps {
@@ -25,12 +28,15 @@ interface DataTableProps {
   data: any[];
   handleSearch: (nama_negara: string) => void;
   handleDetail: (uid: string) => void;
+  handleDelete: (uid: string) => void;
 }
 
 const DataTable = (props: DataTableProps) => {
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage, setDataPerPage] = useState(4); // Jumlah data per halaman
+  const [openDeleteModal, setOpenDeleteModal] = useState(false); // State untuk mengatur modal delete
+  const [deleteUid, setDeleteUid] = useState<string | null>(null); // State untuk menyimpan uid data yang akan dihapus
 
   const keys =
     props.data.length > 0
@@ -40,7 +46,10 @@ const DataTable = (props: DataTableProps) => {
 
   // Filter data berdasarkan pencarian
   const filteredData = props.data.filter((item) =>
-    keys.some((key) => item[key].toString().toLowerCase().includes(search.toLowerCase()))
+    keys.some((key) => {
+      const value = item[key];
+      return value ? value.toString().toLowerCase().includes(search.toLowerCase()) : false;
+    })
   );
 
   // Logic untuk mengambil data per halaman dari data yang sudah difilter
@@ -66,6 +75,19 @@ const DataTable = (props: DataTableProps) => {
 
   const handleDetail = (uid: string) => {
     props.handleDetail(uid);
+  };
+
+  const handleDeleteConfirmation = (uid: string) => {
+    setDeleteUid(uid); // Simpan uid dari item yang akan dihapus
+    setOpenDeleteModal(true); // Buka modal konfirmasi penghapusan
+  };
+
+  const handleDelete = () => {
+    if (deleteUid) {
+      props.handleDelete(deleteUid); // Panggil fungsi handleDelete dari props dengan uid yang akan dihapus
+    }
+    setOpenDeleteModal(false); // Tutup modal konfirmasi penghapusan
+    setDeleteUid(null); // Bersihkan uid yang disimpan
   };
 
   return (
@@ -172,7 +194,11 @@ const DataTable = (props: DataTableProps) => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip content={`Delete ${props.title.toLocaleLowerCase()}`}>
-                      <IconButton variant="text" placeholder={undefined}>
+                      <IconButton
+                        variant="text"
+                        onClick={() => handleDeleteConfirmation(row["uid"])}
+                        placeholder={undefined}
+                      >
                         <TrashIcon className="h-6 w-6 text-red-500" />
                       </IconButton>
                     </Tooltip>
@@ -233,6 +259,41 @@ const DataTable = (props: DataTableProps) => {
           </IconButton>
         </div>
       </CardFooter>
+      {/* Modal for delete confirmation */}
+      <Dialog
+        open={openDeleteModal}
+        handler={() => setOpenDeleteModal(!openDeleteModal)}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+        placeholder={undefined}
+      >
+        <DialogBody placeholder={undefined}>
+          <Typography
+            variant="paragraph"
+            color="blue-gray"
+            className="font-normal"
+            placeholder={undefined}
+          >
+            Apakah kamu yakin akan menghapus data ini?
+          </Typography>
+        </DialogBody>
+        <DialogFooter placeholder={undefined}>
+          <Button
+            variant="text"
+            color="blue-gray"
+            className="mr-4"
+            onClick={() => setOpenDeleteModal(false)}
+            placeholder={undefined}
+          >
+            Cancel
+          </Button>
+          <Button variant="gradient" onClick={handleDelete} color="red" placeholder={undefined}>
+            Delete
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </Card>
   );
 };

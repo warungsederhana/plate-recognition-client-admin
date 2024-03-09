@@ -18,6 +18,16 @@ const JenisKendaraanPage = () => {
     router.push(`/dashboard/data/jenis-kendaraan/${uid}`);
   };
 
+  const handleDelete = async (uid: string) => {
+    try {
+      await axios.delete(`http://localhost:3344/api/jenis-kendaraan/${uid}`);
+      const data = dataJenisKendaraan.filter((item) => item.uid !== uid);
+      setDataJenisKendaraan(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchDataJenisKendaraan = async () => {
       const res = await axios.get(
@@ -43,6 +53,7 @@ const JenisKendaraanPage = () => {
           data={dataJenisKendaraan}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
+          handleDelete={handleDelete}
         />
       </div>
     </>
