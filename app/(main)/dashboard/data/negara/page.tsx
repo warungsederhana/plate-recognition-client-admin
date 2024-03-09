@@ -18,6 +18,16 @@ const DataNegaraPage = () => {
     router.push(`/dashboard/data/negara/${uid}`);
   };
 
+  const handleDelete = async (uid: string) => {
+    try {
+      await axios.delete(`http://localhost:3344/api/negara-asal/${uid}`);
+      const data = dataNegara.filter((item) => item.uid !== uid);
+      setDataNegara(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchDataNegara = async () => {
       // Menambahkan query pencarian ke URL
@@ -44,6 +54,7 @@ const DataNegaraPage = () => {
           data={dataNegara}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
+          handleDelete={handleDelete}
         />
       </div>
     </>

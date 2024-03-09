@@ -18,6 +18,16 @@ const TypeKendaraanPage = () => {
     router.push(`/dashboard/data/type-kendaraan/${uid}`);
   };
 
+  const handleDelete = async (uid: string) => {
+    try {
+      await axios.delete(`http://localhost:3344/api/type-kendaraan/${uid}`);
+      const data = dataTypeKendaraan.filter((item) => item.uid !== uid);
+      setDataTypeKendaraan(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchDataTypeKendaraan = async () => {
       const res = await axios.get(
@@ -43,6 +53,7 @@ const TypeKendaraanPage = () => {
           data={dataTypeKendaraan}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
+          handleDelete={handleDelete}
         />
       </div>
     </>
