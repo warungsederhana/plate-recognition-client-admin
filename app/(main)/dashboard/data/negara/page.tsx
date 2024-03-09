@@ -15,7 +15,7 @@ const DataNegaraPage = () => {
   };
 
   const handleDetail = (uid: string) => {
-    router.push(`/dashboard/data/negara/${uid}`);
+    router.push(`/dashboard/data/negara/detail/${uid}`);
   };
 
   const handleDelete = async (uid: string) => {

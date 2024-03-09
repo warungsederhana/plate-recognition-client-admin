@@ -15,7 +15,7 @@ const DataMerkKendaraanPage = () => {
   };
 
   const handleDetail = (uid: string) => {
-    router.push(`/dashboard/data/merk-kendaraan/${uid}`);
+    router.push(`/dashboard/data/merk-kendaraan/detail/${uid}`);
   };
 
   const handleDelete = async (uid: string) => {

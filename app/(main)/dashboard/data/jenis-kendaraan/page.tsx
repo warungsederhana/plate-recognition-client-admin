@@ -15,7 +15,7 @@ const JenisKendaraanPage = () => {
   };
 
   const handleDetail = (uid: string) => {
-    router.push(`/dashboard/data/jenis-kendaraan/${uid}`);
+    router.push(`/dashboard/data/jenis-kendaraan/detail/${uid}`);
   };
 
   const handleDelete = async (uid: string) => {
