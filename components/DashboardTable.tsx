@@ -12,7 +12,10 @@ const DashboardTable = (props: DashboardTableProps) => {
   const TABLE_ROWS = props.data;
 
   return (
-    <Card className="h-full w-full mt-6" placeholder={undefined}>
+    <Card
+      className="h-full w-full mt-6 border border-solid border-neutrals-200"
+      placeholder={undefined}
+    >
       <CardHeader floated={false} shadow={false} className="rounded-none" placeholder={undefined}>
         <Typography variant="h6" color="blue-gray" className="font-bold" placeholder={undefined}>
           TABEL {props.title}

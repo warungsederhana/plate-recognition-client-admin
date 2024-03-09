@@ -36,7 +36,7 @@ const KendaraanPage = () => {
 
   return (
     <>
-      <div className="pt-6 px-16">
+      <div className="p-6 px-16">
         <DataTable
           title={"Kendaraan"}
           data={dataKendaraan}
