@@ -54,7 +54,7 @@ const LoginPage = () => {
       });
 
       setIsLoading(false);
-      router.push("/");
+      router.push("/dashboard");
       toast.success("Berhasil masuk.");
     } catch (error) {
       setIsLoading(false);

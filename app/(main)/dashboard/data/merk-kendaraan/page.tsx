@@ -7,7 +7,8 @@ import DataTable from "../../../../../components/DataTable";
 const DataMerkKendaraanPage = () => {
   const [dataMerkKendaraan, setDataMerkKendaraan] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
-  const [size, setSize] = useState<number>(0);
+  const KEY = ["id", "nama_merk", "kode_negara_asal"];
+
   const router = useRouter();
 
   const handleSearch = (nama_merk: string) => {
@@ -28,16 +29,18 @@ const DataMerkKendaraanPage = () => {
     }
   };
 
+  const handleCreate = () => {
+    router.push("/dashboard/data/merk-kendaraan/create");
+  };
+
   useEffect(() => {
     const fetchDataMerkKendaraan = async () => {
       const res = await axios.get(`http://localhost:3344/api/merk-kendaraan/?nama_merk=${search}`);
-      setSize(res.data.size);
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
         delete item.updatedAt;
         return item;
       });
-      console.log(data);
       setDataMerkKendaraan([...data]);
     };
 
@@ -49,9 +52,11 @@ const DataMerkKendaraanPage = () => {
         <DataTable
           title={"Merk Kendaraan"}
           data={dataMerkKendaraan}
+          keys={KEY}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
           handleDelete={handleDelete}
+          handleCreate={handleCreate}
         />
       </div>
     </>

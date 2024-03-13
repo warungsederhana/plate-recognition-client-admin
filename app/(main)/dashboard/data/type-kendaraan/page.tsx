@@ -7,7 +7,15 @@ import DataTable from "../../../../../components/DataTable";
 const TypeKendaraanPage = () => {
   const [dataTypeKendaraan, setDataTypeKendaraan] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
-  const [size, setSize] = useState<number>(0);
+  const KEY = [
+    "id",
+    "nama_type_kendaraan",
+    "nama_type_kendaraan_eri",
+    "id_jenis_kendaraan",
+    "id_merk_kendaraan",
+    "kode_negara_asal",
+  ];
+
   const router = useRouter();
 
   const handleSearch = (nama_type: string) => {
@@ -28,12 +36,15 @@ const TypeKendaraanPage = () => {
     }
   };
 
+  const handleCreate = () => {
+    router.push("/dashboard/data/type-kendaraan/create");
+  };
+
   useEffect(() => {
     const fetchDataTypeKendaraan = async () => {
       const res = await axios.get(
         `http://localhost:3344/api/type-kendaraan/?nama_type_kendaraan=${search}`
       );
-      setSize(res.data.size);
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
         delete item.updatedAt;
@@ -51,9 +62,11 @@ const TypeKendaraanPage = () => {
         <DataTable
           title={"Type Kendaraan"}
           data={dataTypeKendaraan}
+          keys={KEY}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
           handleDelete={handleDelete}
+          handleCreate={handleCreate}
         />
       </div>
     </>

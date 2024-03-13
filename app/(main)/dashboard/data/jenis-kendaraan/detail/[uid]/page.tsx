@@ -19,6 +19,9 @@ interface DataJenisKendaraan {
   nama_jenis_kendaraan: string;
   kode_jenis_kendaraan: string;
   jumlah_sumbu: string;
+  id_jenis_mapping: string;
+  id_model_kendaraan: string;
+  kategori_jenis: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -60,10 +63,14 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
                 <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
                   <div className="w-full flex flex-col gap-1">
                     <Typography color="black" variant="paragraph" placeholder={undefined}>
-                      Id:
+                      Nama Jenis Kendaraan:
                     </Typography>
                     <Input
-                      value={dataJenisKendaraan.id}
+                      value={
+                        dataJenisKendaraan?.nama_jenis_kendaraan
+                          ? dataJenisKendaraan.nama_jenis_kendaraan
+                          : "-"
+                      }
                       disabled
                       size="md"
                       placeholder="ID"
@@ -92,10 +99,14 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
                 <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
                   <div className="w-full flex flex-col gap-1">
                     <Typography color="black" variant="paragraph" placeholder={undefined}>
-                      Nama Jenis Kendaraan:
+                      Kode Jenis Kendaraan:
                     </Typography>
                     <Input
-                      value={dataJenisKendaraan.nama_jenis_kendaraan}
+                      value={
+                        dataJenisKendaraan?.kode_jenis_kendaraan
+                          ? dataJenisKendaraan.kode_jenis_kendaraan
+                          : "-"
+                      }
                       disabled
                       size="md"
                       placeholder="ID"
@@ -106,10 +117,66 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
 
                   <div className="w-full flex flex-col gap-1">
                     <Typography color="black" variant="paragraph" placeholder={undefined}>
-                      Kode Jenis Kendaraan:
+                      ID:
                     </Typography>
                     <Input
-                      value={dataJenisKendaraan.kode_jenis_kendaraan}
+                      value={dataJenisKendaraan?.id ? dataJenisKendaraan.id : "-"}
+                      disabled
+                      size="md"
+                      placeholder="ID"
+                      className="w-full lg:w-96"
+                      crossOrigin={undefined}
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
+                  <div className="w-full flex flex-col gap-1">
+                    <Typography color="black" variant="paragraph" placeholder={undefined}>
+                      ID Jenis Mapping:
+                    </Typography>
+                    <Input
+                      value={
+                        dataJenisKendaraan?.id_jenis_mapping
+                          ? dataJenisKendaraan.id_jenis_mapping
+                          : "-"
+                      }
+                      disabled
+                      size="md"
+                      placeholder="ID"
+                      className="w-full lg:w-96"
+                      crossOrigin={undefined}
+                    />
+                  </div>
+
+                  <div className="w-full flex flex-col gap-1">
+                    <Typography color="black" variant="paragraph" placeholder={undefined}>
+                      ID Model Kendaraan:
+                    </Typography>
+                    <Input
+                      value={
+                        dataJenisKendaraan?.id_model_kendaraan
+                          ? dataJenisKendaraan.id_model_kendaraan
+                          : "-"
+                      }
+                      disabled
+                      size="md"
+                      placeholder="ID"
+                      className="w-full lg:w-96"
+                      crossOrigin={undefined}
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
+                  <div className="w-full flex flex-col gap-1">
+                    <Typography color="black" variant="paragraph" placeholder={undefined}>
+                      Kategori Jenis:
+                    </Typography>
+                    <Input
+                      value={
+                        dataJenisKendaraan?.kategori_jenis ? dataJenisKendaraan.kategori_jenis : "-"
+                      }
                       disabled
                       size="md"
                       placeholder="ID"

@@ -26,9 +26,11 @@ import {
 interface DataTableProps {
   title: string;
   data: any[];
+  keys: string[];
   handleSearch: (nama_negara: string) => void;
   handleDetail: (uid: string) => void;
   handleDelete: (uid: string) => void;
+  handleCreate: () => void;
 }
 
 const DataTable = (props: DataTableProps) => {
@@ -38,10 +40,7 @@ const DataTable = (props: DataTableProps) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false); // State untuk mengatur modal delete
   const [deleteUid, setDeleteUid] = useState<string | null>(null); // State untuk menyimpan uid data yang akan dihapus
 
-  const keys =
-    props.data.length > 0
-      ? Object.keys(props.data[0]).filter((key) => key !== "uid")
-      : ["TIDAK ADA DATA"];
+  const keys = props.keys;
   const TABLE_HEAD = [...keys.map((key) => key.replace(/_/g, " ").toUpperCase()), "ACTIONS"];
 
   // Filter data berdasarkan pencarian
@@ -75,6 +74,10 @@ const DataTable = (props: DataTableProps) => {
 
   const handleDetail = (uid: string) => {
     props.handleDetail(uid);
+  };
+
+  const handleCreate = () => {
+    props.handleCreate();
   };
 
   const handleDeleteConfirmation = (uid: string) => {
@@ -126,6 +129,7 @@ const DataTable = (props: DataTableProps) => {
             className="flex items-center gap-2 bg-primary-400"
             size="sm"
             placeholder={undefined}
+            onClick={handleCreate}
           >
             <FolderPlusIcon strokeWidth={2} className="h-4 w-4" />
             <Typography variant="small" placeholder={undefined}>
