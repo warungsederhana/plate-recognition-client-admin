@@ -7,7 +7,7 @@ import DataTable from "../../../../../components/DataTable";
 const DataNegaraPage = () => {
   const [dataNegara, setDataNegara] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
-  const [size, setSize] = useState<number>(0);
+  const KEY = ["id", "nama_negara", "kode_negara"];
   const router = useRouter();
 
   const handleSearch = (nama_negara: string) => {
@@ -28,11 +28,14 @@ const DataNegaraPage = () => {
     }
   };
 
+  const handleCreate = () => {
+    router.push("/dashboard/data/negara/create");
+  };
+
   useEffect(() => {
     const fetchDataNegara = async () => {
       // Menambahkan query pencarian ke URL
       const res = await axios.get(`http://localhost:3344/api/negara-asal/?nama_negara=${search}`);
-      setSize(res.data.size);
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
         delete item.updatedAt;
@@ -52,9 +55,11 @@ const DataNegaraPage = () => {
         <DataTable
           title={"Negara"}
           data={dataNegara}
+          keys={KEY}
           handleSearch={handleSearch}
           handleDetail={handleDetail}
           handleDelete={handleDelete}
+          handleCreate={handleCreate}
         />
       </div>
     </>

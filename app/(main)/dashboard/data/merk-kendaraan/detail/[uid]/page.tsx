@@ -11,7 +11,12 @@ import {
   CardFooter,
   IconButton,
   Tooltip,
+  Dialog,
+  DialogBody,
+  DialogFooter,
 } from "@material-tailwind/react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface DataMerkKendaraan {
   uid: string;
@@ -23,7 +28,9 @@ interface DataMerkKendaraan {
 }
 
 const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
+  const router = useRouter();
   const [dataMerkKendaraan, setDataMerkKendaraan] = useState<DataMerkKendaraan>();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   useEffect(() => {
     const fetchDataMerkKendaraan = async () => {
@@ -37,6 +44,27 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
 
     fetchDataMerkKendaraan();
   }, [params.uid]);
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3344/api/merk-kendaraan/${dataMerkKendaraan?.uid}`
+      );
+      if (
+        response.status === 201 ||
+        response.statusText === "Created" ||
+        response.status === 200 ||
+        response.statusText === "OK"
+      ) {
+        toast.success("Data berhasil dihapus");
+        setOpenDeleteModal(false);
+        router.push("/dashboard/data/merk-kendaraan");
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      toast.error("Gagal menghapus data");
+    }
+  };
 
   return (
     <>
@@ -112,10 +140,51 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
                   className="!bg-danger-400 min-w-24"
                   size="sm"
                   children="Delete"
+                  onClick={() => setOpenDeleteModal(true)}
                   placeholder={undefined}
                 />
               </div>
             </CardFooter>
+
+            <Dialog
+              open={openDeleteModal}
+              handler={() => setOpenDeleteModal(!openDeleteModal)}
+              animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0.9, y: -100 },
+              }}
+              placeholder={undefined}
+            >
+              <DialogBody placeholder={undefined}>
+                <Typography
+                  variant="paragraph"
+                  color="blue-gray"
+                  className="font-normal"
+                  placeholder={undefined}
+                >
+                  Apakah kamu yakin akan menghapus data ini?
+                </Typography>
+              </DialogBody>
+              <DialogFooter placeholder={undefined}>
+                <Button
+                  variant="text"
+                  color="blue-gray"
+                  className="mr-4"
+                  onClick={() => setOpenDeleteModal(false)}
+                  placeholder={undefined}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="gradient"
+                  onClick={handleDelete}
+                  color="red"
+                  placeholder={undefined}
+                >
+                  Delete
+                </Button>
+              </DialogFooter>
+            </Dialog>
           </Card>
         ) : (
           <p>Loading...</p>

@@ -11,7 +11,12 @@ import {
   CardFooter,
   IconButton,
   Tooltip,
+  Dialog,
+  DialogBody,
+  DialogFooter,
 } from "@material-tailwind/react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface DataJenisKendaraan {
   uid: string;
@@ -19,12 +24,17 @@ interface DataJenisKendaraan {
   nama_jenis_kendaraan: string;
   kode_jenis_kendaraan: string;
   jumlah_sumbu: string;
+  id_jenis_mapping: string;
+  id_model_kendaraan: string;
+  kategori_jenis: string;
   createdAt: string;
   updatedAt: string;
 }
 
 const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
+  const router = useRouter();
   const [dataJenisKendaraan, setDataJenisKendaraan] = useState<DataJenisKendaraan>();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   useEffect(() => {
     const fetchDataJenisKendaraan = async () => {
@@ -38,6 +48,27 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
 
     fetchDataJenisKendaraan();
   }, [params.uid]);
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3344/api/jenis-kendaraan/${dataJenisKendaraan?.uid}`
+      );
+      if (
+        response.status === 201 ||
+        response.statusText === "Created" ||
+        response.status === 200 ||
+        response.statusText === "OK"
+      ) {
+        toast.success("Data berhasil dihapus");
+        setOpenDeleteModal(false);
+        router.push("/dashboard/data/jenis-kendaraan");
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      toast.error("Gagal menghapus data");
+    }
+  };
 
   return (
     <>
@@ -60,10 +91,14 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
                 <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
                   <div className="w-full flex flex-col gap-1">
                     <Typography color="black" variant="paragraph" placeholder={undefined}>
-                      Id:
+                      Nama Jenis Kendaraan:
                     </Typography>
                     <Input
-                      value={dataJenisKendaraan.id}
+                      value={
+                        dataJenisKendaraan?.nama_jenis_kendaraan
+                          ? dataJenisKendaraan.nama_jenis_kendaraan
+                          : "-"
+                      }
                       disabled
                       size="md"
                       placeholder="ID"
@@ -92,10 +127,14 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
                 <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
                   <div className="w-full flex flex-col gap-1">
                     <Typography color="black" variant="paragraph" placeholder={undefined}>
-                      Nama Jenis Kendaraan:
+                      Kode Jenis Kendaraan:
                     </Typography>
                     <Input
-                      value={dataJenisKendaraan.nama_jenis_kendaraan}
+                      value={
+                        dataJenisKendaraan?.kode_jenis_kendaraan
+                          ? dataJenisKendaraan.kode_jenis_kendaraan
+                          : "-"
+                      }
                       disabled
                       size="md"
                       placeholder="ID"
@@ -106,10 +145,66 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
 
                   <div className="w-full flex flex-col gap-1">
                     <Typography color="black" variant="paragraph" placeholder={undefined}>
-                      Kode Jenis Kendaraan:
+                      ID:
                     </Typography>
                     <Input
-                      value={dataJenisKendaraan.kode_jenis_kendaraan}
+                      value={dataJenisKendaraan?.id ? dataJenisKendaraan.id : "-"}
+                      disabled
+                      size="md"
+                      placeholder="ID"
+                      className="w-full lg:w-96"
+                      crossOrigin={undefined}
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
+                  <div className="w-full flex flex-col gap-1">
+                    <Typography color="black" variant="paragraph" placeholder={undefined}>
+                      ID Jenis Mapping:
+                    </Typography>
+                    <Input
+                      value={
+                        dataJenisKendaraan?.id_jenis_mapping
+                          ? dataJenisKendaraan.id_jenis_mapping
+                          : "-"
+                      }
+                      disabled
+                      size="md"
+                      placeholder="ID"
+                      className="w-full lg:w-96"
+                      crossOrigin={undefined}
+                    />
+                  </div>
+
+                  <div className="w-full flex flex-col gap-1">
+                    <Typography color="black" variant="paragraph" placeholder={undefined}>
+                      ID Model Kendaraan:
+                    </Typography>
+                    <Input
+                      value={
+                        dataJenisKendaraan?.id_model_kendaraan
+                          ? dataJenisKendaraan.id_model_kendaraan
+                          : "-"
+                      }
+                      disabled
+                      size="md"
+                      placeholder="ID"
+                      className="w-full lg:w-96"
+                      crossOrigin={undefined}
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
+                  <div className="w-full flex flex-col gap-1">
+                    <Typography color="black" variant="paragraph" placeholder={undefined}>
+                      Kategori Jenis:
+                    </Typography>
+                    <Input
+                      value={
+                        dataJenisKendaraan?.kategori_jenis ? dataJenisKendaraan.kategori_jenis : "-"
+                      }
                       disabled
                       size="md"
                       placeholder="ID"
@@ -133,10 +228,51 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
                   className="!bg-danger-400 min-w-24"
                   size="sm"
                   children="Delete"
+                  onClick={() => setOpenDeleteModal(true)}
                   placeholder={undefined}
                 />
               </div>
             </CardFooter>
+
+            <Dialog
+              open={openDeleteModal}
+              handler={() => setOpenDeleteModal(!openDeleteModal)}
+              animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0.9, y: -100 },
+              }}
+              placeholder={undefined}
+            >
+              <DialogBody placeholder={undefined}>
+                <Typography
+                  variant="paragraph"
+                  color="blue-gray"
+                  className="font-normal"
+                  placeholder={undefined}
+                >
+                  Apakah kamu yakin akan menghapus data ini?
+                </Typography>
+              </DialogBody>
+              <DialogFooter placeholder={undefined}>
+                <Button
+                  variant="text"
+                  color="blue-gray"
+                  className="mr-4"
+                  onClick={() => setOpenDeleteModal(false)}
+                  placeholder={undefined}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="gradient"
+                  onClick={handleDelete}
+                  color="red"
+                  placeholder={undefined}
+                >
+                  Delete
+                </Button>
+              </DialogFooter>
+            </Dialog>
           </Card>
         ) : (
           <p>Loading...</p>
