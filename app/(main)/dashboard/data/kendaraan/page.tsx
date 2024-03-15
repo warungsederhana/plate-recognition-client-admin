@@ -70,6 +70,7 @@ const KendaraanPage = () => {
     "tanggal_daftar",
     "tanggal_bayar",
     "tahun_berlaku",
+    "tanggal_max_bayar_bbn",
     "tanggal_max_bayar_pkb",
     "tanggal_max_bayar_swdkllj",
     "kode_pembayaran",

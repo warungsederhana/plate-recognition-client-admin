@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import Select from "react-select";
-import DatePicker from "react-datepicker";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   Card,
@@ -16,6 +17,8 @@ import {
 } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import kendaraanSchema from "../../../../../../schema/kendaraan.schema";
+dayjs.locale("id");
 
 const CreateKendaraanPage = () => {
   const router = useRouter();
@@ -61,33 +64,34 @@ const CreateKendaraanPage = () => {
     id_lokasi_proses: "",
     dati2_proses: "",
     tujuan_mutasi: "",
-    tanggal_faktur: new Date(),
-    tanggal_kwitansi: new Date(),
-    tanggal_akhir_stnk: new Date(),
-    tanggal_akhir_stnk_lama: new Date(),
-    tanggal_jatuh_tempo: new Date(),
-    tanggal_jatuh_tempo_lama: new Date(),
+    tanggal_faktur: "",
+    tanggal_kwitansi: "",
+    tanggal_akhir_stnk: "",
+    tanggal_akhir_stnk_lama: "",
+    tanggal_jatuh_tempo: "",
+    tanggal_jatuh_tempo_lama: "",
     id_status: "",
-    bbn1_pokok: "",
-    bbn1_denda: "",
-    pkb_pokok: "",
-    pkb_denda: "",
-    pkb_bunga: "",
-    swdkllj_pokok: "",
-    swdkllj_denda: "",
-    stnk: "",
+    bbn1_pokok: 0,
+    bbn1_denda: 0,
+    pkb_pokok: 0,
+    pkb_denda: 0,
+    pkb_bunga: 0,
+    swdkllj_pokok: 0,
+    swdkllj_denda: 0,
+    stnk: 0,
     no_skpd: "",
     no_kohir: "",
     no_skum: "",
-    tanggal_daftar: new Date(),
-    tanggal_bayar: new Date(),
+    tanggal_daftar: "",
+    tanggal_bayar: "",
     tahun_berlaku: "",
-    tanggal_max_bayar_pkb: new Date(),
-    tanggal_max_bayar_swdkllj: new Date(),
+    tanggal_max_bayar_bbn: "",
+    tanggal_max_bayar_pkb: "",
+    tanggal_max_bayar_swdkllj: "",
     kode_pembayaran: "",
     dpwkp: "",
     ket_dpwkp: "",
-    tanggal_jatuh_tempo_dpwkp: new Date(),
+    tanggal_jatuh_tempo_dpwkp: "",
     subsidi: false,
     njkb: "",
   });
@@ -154,6 +158,7 @@ const CreateKendaraanPage = () => {
     tanggal_daftar: "",
     tanggal_bayar: "",
     tahun_berlaku: "",
+    tanggal_max_bayar_bbn: "",
     tanggal_max_bayar_pkb: "",
     tanggal_max_bayar_swdkllj: "",
     kode_pembayaran: "",
@@ -208,12 +213,56 @@ const CreateKendaraanPage = () => {
       .catch((error) => console.error("Error fetching type kendaraan:", error));
   }, []);
 
+  useEffect(() => {
+    setKendaraan((prevKendaraan) => ({
+      ...prevKendaraan,
+      id_model_kendaraan: `${prevKendaraan.id_jenis_kendaraan}${prevKendaraan.id_merk_kendaraan}${prevKendaraan.id_type_kendaraan}`,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      id_model_kendaraan: "",
+    }));
+  }, [kendaraan.id_jenis_kendaraan, kendaraan.id_merk_kendaraan, kendaraan.id_type_kendaraan]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let formattedValue: string | number = value;
+
+    // Daftar nama properti yang diharapkan bertipe number
+    const numberFields = [
+      "id_fungsi_kendaraan",
+      "id_warna_tnkb",
+      "tahun_buat",
+      "tahun_rakit",
+      "tahun_ub",
+      "cylinder",
+      "bbn1_pokok",
+      "bbn1_denda",
+      "pkb_pokok",
+      "pkb_denda",
+      "pkb_bunga",
+      "swdkllj_pokok",
+      "swdkllj_denda",
+      "stnk",
+      "njkb",
+      "id_bahan_bakar",
+      "jumlah_sumbu",
+      "progresif",
+      "progresif_tarif",
+      "dpwkp",
+      "tahun_berlaku",
+    ];
+
+    // Konversi value ke number jika nama properti termasuk dalam daftar numberFields
+    if (numberFields.includes(name)) {
+      formattedValue = parseInt(value) || 0; // Gunakan parseFloat() untuk desimal
+    }
+
     setKendaraan({
       ...kendaraan,
-      [name]: value,
+      [name]: formattedValue,
     });
+
     setErrors({
       ...errors,
       [name]: "",
@@ -232,9 +281,10 @@ const CreateKendaraanPage = () => {
   };
 
   const handleDateChange = (date: any, name: any) => {
+    console.log("handle date change");
     setKendaraan({
       ...kendaraan,
-      [name]: date,
+      [name]: date.format("DD/MM/YYYY"),
     });
     setErrors({
       ...errors,
@@ -319,6 +369,7 @@ const CreateKendaraanPage = () => {
       tanggal_daftar: "",
       tanggal_bayar: "",
       tahun_berlaku: "",
+      tanggal_max_bayar_bbn: "",
       tanggal_max_bayar_pkb: "",
       tanggal_max_bayar_swdkllj: "",
       kode_pembayaran: "",
@@ -333,282 +384,307 @@ const CreateKendaraanPage = () => {
     if (!kendaraan.id) {
       newErrors.id = "ID harus diisi!";
       isValid = false;
+      console.log(`id kendaraan ${isValid}`);
     }
     if (!kendaraan.no_daftar) {
       newErrors.no_daftar = "Nomor daftar harus diisi!";
       isValid = false;
+      console.log(`no daftar ${isValid}`);
     }
     if (!kendaraan.no_daftar_eri) {
       newErrors.no_daftar_eri = "Nomor daftar ERI harus diisi!";
       isValid = false;
+      console.log(`no daftar eri ${isValid}`);
     }
     if (!kendaraan.id_kepemilikan) {
       newErrors.id_kepemilikan = "ID kepemilikan harus diisi!";
       isValid = false;
+      console.log(`id kepemilikan ${isValid}`);
     }
     if (!kendaraan.no_kk) {
       newErrors.no_kk = "Nomor KK harus diisi!";
       isValid = false;
+      console.log(`no kk ${isValid}`);
     }
     if (!kendaraan.no_polisi) {
       newErrors.no_polisi = "Nomor polisi harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.no_polisi_lama) {
-      newErrors.no_polisi_lama = "Nomor polisi lama harus diisi!";
-      isValid = false;
+      console.log(`no polisi ${isValid}`);
     }
     if (!kendaraan.nama_pemilik) {
       newErrors.nama_pemilik = "Nama pemilik harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.nama_pemilik_lama) {
-      newErrors.nama_pemilik_lama = "Nama pemilik lama harus diisi!";
-      isValid = false;
+      console.log(`nama pemilik ${isValid}`);
     }
     if (!kendaraan.alamat1) {
       newErrors.alamat1 = "Alamat 1 harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.alamat2) {
-      newErrors.alamat2 = "Alamat 2 harus diisi!";
-      isValid = false;
+      console.log(`alamat1 ${isValid}`);
     }
     if (!kendaraan.id_kelurahan) {
       newErrors.id_kelurahan = "ID kelurahan harus diisi!";
       isValid = false;
+      console.log(`id kelurahan ${isValid}`);
     }
     if (!kendaraan.no_telp) {
       newErrors.no_telp = "Nomor telepon harus diisi!";
       isValid = false;
+      console.log(`no telp ${isValid}`);
     }
     if (!kendaraan.id_jenis_kendaraan) {
       newErrors.id_jenis_kendaraan = "ID jenis kendaraan harus diisi!";
       isValid = false;
+      console.log(`id jenis kendaraan ${isValid}`);
     }
     if (!kendaraan.id_merk_kendaraan) {
       newErrors.id_merk_kendaraan = "ID merk kendaraan harus diisi!";
       isValid = false;
+      console.log(`id merk kendaraan ${isValid}`);
     }
     if (!kendaraan.id_type_kendaraan) {
       newErrors.id_type_kendaraan = "ID tipe kendaraan harus diisi!";
       isValid = false;
+      console.log(`id type kendaraan ${isValid}`);
     }
     if (!kendaraan.id_model_kendaraan) {
       newErrors.id_model_kendaraan = "ID model kendaraan harus diisi!";
       isValid = false;
+      console.log(`id model kendaraan ${isValid}`);
     }
     if (!kendaraan.id_jenis_map) {
       newErrors.id_jenis_map = "ID jenis MAP harus diisi!";
       isValid = false;
+      console.log(`id jenis map ${isValid}`);
     }
     if (!kendaraan.tahun_buat) {
       newErrors.tahun_buat = "Tahun pembuatan harus diisi!";
       isValid = false;
+      console.log(`tahun buat ${isValid}`);
     }
     if (!kendaraan.tahun_rakit) {
       newErrors.tahun_rakit = "Tahun perakitan harus diisi!";
       isValid = false;
+      console.log(`tahun rakit ${isValid}`);
     }
     if (!kendaraan.tahun_ub) {
       newErrors.tahun_ub = "Tahun UB harus diisi!";
       isValid = false;
+      console.log(`tahun ub ${isValid}`);
     }
     if (!kendaraan.cylinder) {
       newErrors.cylinder = "Cylinder harus diisi!";
       isValid = false;
+      console.log(`cylinder ${isValid}`);
     }
     if (!kendaraan.id_golongan_kendaraan) {
       newErrors.id_golongan_kendaraan = "ID golongan kendaraan harus diisi!";
       isValid = false;
+      console.log(`id golongan kendaraan ${isValid}`);
     }
     if (!kendaraan.id_warna_tnkb) {
       newErrors.id_warna_tnkb = "ID warna TNKB harus diisi!";
       isValid = false;
+      console.log(`id warna tnkb ${isValid}`);
     }
     if (!kendaraan.warna_kendaraan) {
       newErrors.warna_kendaraan = "Warna kendaraan harus diisi!";
       isValid = false;
+      console.log(`warna kendaraan ${isValid}`);
     }
     if (!kendaraan.id_lokasi) {
       newErrors.id_lokasi = "ID lokasi harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.dati2_induk) {
-      newErrors.dati2_induk = "Dati2 induk harus diisi!";
-      isValid = false;
+      console.log(`id lokasi ${isValid}`);
     }
     if (!kendaraan.id_fungsi_kendaraan) {
       newErrors.id_fungsi_kendaraan = "ID fungsi kendaraan harus diisi!";
       isValid = false;
+      console.log(`id fungsi kendaraan ${isValid}`);
     }
     if (!kendaraan.id_bahan_bakar) {
       newErrors.id_bahan_bakar = "ID bahan bakar harus diisi!";
       isValid = false;
+      console.log(`id bahan bakar ${isValid}`);
     }
     if (!kendaraan.no_rangka) {
       newErrors.no_rangka = "Nomor rangka harus diisi!";
       isValid = false;
+      console.log(`no rangka ${isValid}`);
     }
     if (!kendaraan.no_mesin) {
       newErrors.no_mesin = "Nomor mesin harus diisi!";
       isValid = false;
+      console.log(`no mesin ${isValid}`);
     }
     if (!kendaraan.no_bpkb) {
       newErrors.no_bpkb = "Nomor BPKB harus diisi!";
       isValid = false;
+      console.log(`no bpkb ${isValid}`);
     }
     if (!kendaraan.jumlah_sumbu) {
       newErrors.jumlah_sumbu = "Jumlah sumbu harus diisi!";
       isValid = false;
+      console.log(`jumlah sumbu ${isValid}`);
     }
     if (!kendaraan.kode_jenis) {
       newErrors.kode_jenis = "Kode jenis harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.status_blokir) {
-      newErrors.status_blokir = "Status blokir harus diisi!";
-      isValid = false;
+      console.log(`kode jenis ${isValid}`);
     }
     if (!kendaraan.progresif) {
       newErrors.progresif = "Progresif harus diisi!";
       isValid = false;
+      console.log(`progresif ${isValid}`);
     }
     if (!kendaraan.progresif_tarif) {
       newErrors.progresif_tarif = "Tarif progresif harus diisi!";
       isValid = false;
+      console.log(`progresif tarif ${isValid}`);
     }
     if (!kendaraan.id_pendaftaran) {
       newErrors.id_pendaftaran = "ID pendaftaran harus diisi!";
       isValid = false;
+      console.log(`id pendaftaran ${isValid}`);
     }
     if (!kendaraan.id_lokasi_proses) {
       newErrors.id_lokasi_proses = "ID lokasi proses harus diisi!";
       isValid = false;
+      console.log(`id lokasi proses ${isValid}`);
+    }
+    if (!kendaraan.dati2_induk) {
+      newErrors.dati2_induk = "Dati2 induk harus diisi!";
+      isValid = false;
+      console.log(`dati2 induk ${isValid}`);
     }
     if (!kendaraan.dati2_proses) {
       newErrors.dati2_proses = "Dati2 proses harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.tujuan_mutasi) {
-      newErrors.tujuan_mutasi = "Tujuan mutasi harus diisi!";
-      isValid = false;
+      console.log(`dati2 proses ${isValid}`);
     }
     if (!kendaraan.tanggal_faktur) {
       newErrors.tanggal_faktur = "Tanggal faktur harus diisi!";
       isValid = false;
+      console.log(`tanggal faktur ${isValid}`);
     }
     if (!kendaraan.tanggal_kwitansi) {
       newErrors.tanggal_kwitansi = "Tanggal kwitansi harus diisi!";
       isValid = false;
+      console.log(`tanggal kwitansi ${isValid}`);
     }
     if (!kendaraan.tanggal_akhir_stnk) {
       newErrors.tanggal_akhir_stnk = "Tanggal akhir STNK harus diisi!";
       isValid = false;
+      console.log(`tanggal akhir stnk ${isValid}`);
     }
     if (!kendaraan.tanggal_akhir_stnk_lama) {
       newErrors.tanggal_akhir_stnk_lama = "Tanggal akhir STNK lama harus diisi!";
       isValid = false;
+      console.log(`tanggal akhir stnk lama ${isValid}`);
     }
     if (!kendaraan.tanggal_jatuh_tempo) {
       newErrors.tanggal_jatuh_tempo = "Tanggal jatuh tempo harus diisi!";
       isValid = false;
+      console.log(`tanggal jatuh tempo ${isValid}`);
     }
     if (!kendaraan.tanggal_jatuh_tempo_lama) {
       newErrors.tanggal_jatuh_tempo_lama = "Tanggal jatuh tempo lama harus diisi!";
       isValid = false;
+      console.log(`tanggal jatuh tempo lama ${isValid}`);
     }
     if (!kendaraan.id_status) {
       newErrors.id_status = "ID status harus diisi!";
       isValid = false;
+      console.log(`id status ${isValid}`);
     }
     if (!kendaraan.bbn1_pokok) {
       newErrors.bbn1_pokok = "BBN1 pokok harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.bbn1_denda) {
-      newErrors.bbn1_denda = "BBN1 denda harus diisi!";
-      isValid = false;
+      console.log(`bbn1 pokok ${isValid}`);
     }
     if (!kendaraan.pkb_pokok) {
       newErrors.pkb_pokok = "PKB pokok harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.pkb_denda) {
-      newErrors.pkb_denda = "PKB denda harus diisi!";
-      isValid = false;
-    }
-    if (!kendaraan.pkb_bunga) {
-      newErrors.pkb_bunga = "PKB bunga harus diisi!";
-      isValid = false;
+      console.log(`pkb pokok ${isValid}`);
     }
     if (!kendaraan.swdkllj_pokok) {
       newErrors.swdkllj_pokok = "SWDKLLJ pokok harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.swdkllj_denda) {
-      newErrors.swdkllj_denda = "SWDKLLJ denda harus diisi!";
-      isValid = false;
+      console.log(`swdkllj pokok ${isValid}`);
     }
     if (!kendaraan.stnk) {
       newErrors.stnk = "STNK harus diisi!";
       isValid = false;
+      console.log(`stnk ${isValid}`);
     }
     if (!kendaraan.no_skpd) {
       newErrors.no_skpd = "Nomor SKPD harus diisi!";
       isValid = false;
+      console.log(`no skpd ${isValid}`);
     }
     if (!kendaraan.no_kohir) {
       newErrors.no_kohir = "Nomor Kohir harus diisi!";
       isValid = false;
+      console.log(`no kohir ${isValid}`);
     }
     if (!kendaraan.no_skum) {
       newErrors.no_skum = "Nomor SKUM harus diisi!";
       isValid = false;
+      console.log(`no skum ${isValid}`);
     }
     if (!kendaraan.tanggal_daftar) {
       newErrors.tanggal_daftar = "Tanggal daftar harus diisi!";
       isValid = false;
+      console.log(`tanggal daftar ${isValid}`);
     }
     if (!kendaraan.tanggal_bayar) {
       newErrors.tanggal_bayar = "Tanggal bayar harus diisi!";
       isValid = false;
+      console.log(`tanggal bayar ${isValid}`);
     }
     if (!kendaraan.tahun_berlaku) {
       newErrors.tahun_berlaku = "Tahun berlaku harus diisi!";
       isValid = false;
+      console.log(`tahun berlaku ${isValid}`);
+    }
+    if (!kendaraan.tanggal_max_bayar_bbn) {
+      newErrors.tanggal_max_bayar_bbn = "Tanggal maksimal bayar PKB harus diisi!";
+      isValid = false;
+      console.log(`tanggal max bayar bbn ${isValid}`);
     }
     if (!kendaraan.tanggal_max_bayar_pkb) {
       newErrors.tanggal_max_bayar_pkb = "Tanggal maksimal bayar PKB harus diisi!";
       isValid = false;
+      console.log(`tanggal max bayar pkb ${isValid}`);
     }
     if (!kendaraan.tanggal_max_bayar_swdkllj) {
       newErrors.tanggal_max_bayar_swdkllj = "Tanggal maksimal bayar SWDKLLJ harus diisi!";
       isValid = false;
+      console.log(`tanggal max bayar swdkllj ${isValid}`);
     }
     if (!kendaraan.kode_pembayaran) {
       newErrors.kode_pembayaran = "Kode pembayaran harus diisi!";
       isValid = false;
+      console.log(`kode pembayaran ${isValid}`);
     }
     if (!kendaraan.dpwkp) {
       newErrors.dpwkp = "DPWKP harus diisi!";
       isValid = false;
+      console.log(`dpwkp ${isValid}`);
     }
     if (!kendaraan.ket_dpwkp) {
       newErrors.ket_dpwkp = "Keterangan DPWKP harus diisi!";
       isValid = false;
+      console.log(`ket dpwkp ${isValid}`);
     }
     if (!kendaraan.tanggal_jatuh_tempo_dpwkp) {
       newErrors.tanggal_jatuh_tempo_dpwkp = "Tanggal jatuh tempo DPWKP harus diisi!";
       isValid = false;
-    }
-    if (!kendaraan.subsidi) {
-      newErrors.subsidi = "Subsidi harus diisi!";
-      isValid = false;
+      console.log(`tanggal jatuh tempo dpwkp ${isValid}`);
     }
     if (!kendaraan.njkb) {
       newErrors.njkb = "NJKB harus diisi!";
       isValid = false;
+      console.log(`njkb ${isValid}`);
     }
 
     setErrors(newErrors);
@@ -616,16 +692,20 @@ const CreateKendaraanPage = () => {
   };
 
   const handleSubmit = async () => {
+    console.log(kendaraan);
+    console.log(validate());
     if (validate()) {
       try {
         const response = await axios.post("http://localhost:3344/api/kendaraan", kendaraan);
-
-        if (response.status === 201 || response.statusText === "Created") {
+        if (
+          response.status === 201 ||
+          response.statusText === "Created" ||
+          response.status === 200 ||
+          response.statusText === "OK"
+        ) {
           router.push("/dashboard/data/kendaraan");
           toast.success("Berhasil menambahkan data kendaraan!");
         }
-
-        console.log(response);
       } catch (error) {
         const axiosError = error as AxiosError<any>; // Type assertion
         if (axiosError.response && axiosError.response.data && axiosError.response.data?.message) {
@@ -665,7 +745,7 @@ const CreateKendaraanPage = () => {
                 {/* ID */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID:
+                    ID*:
                   </Typography>
                   <Input
                     value={kendaraan.id}
@@ -692,7 +772,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Kepemilikan */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Kepemilikan:
+                    ID Kepemilikan*:
                   </Typography>
                   <Input
                     value={kendaraan.id_kepemilikan}
@@ -719,7 +799,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Pendaftaran */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Pendaftaran:
+                    ID Pendaftaran*:
                   </Typography>
                   <Input
                     value={kendaraan.id_pendaftaran}
@@ -748,7 +828,7 @@ const CreateKendaraanPage = () => {
                 {/* No Daftar */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    No Daftar:
+                    No Daftar*:
                   </Typography>
                   <Input
                     value={kendaraan.no_daftar}
@@ -775,7 +855,7 @@ const CreateKendaraanPage = () => {
                 {/* No Daftar ERI */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    No Daftar ERI:
+                    No Daftar ERI*:
                   </Typography>
                   <Input
                     value={kendaraan.no_daftar_eri}
@@ -802,7 +882,7 @@ const CreateKendaraanPage = () => {
                 {/* No KK */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    No KK:
+                    No KK*:
                   </Typography>
                   <Input
                     value={kendaraan.no_kk}
@@ -831,7 +911,7 @@ const CreateKendaraanPage = () => {
                 {/* No Polisi */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    No Polisi:
+                    No Polisi*:
                   </Typography>
                   <Input
                     value={kendaraan.no_polisi}
@@ -885,7 +965,7 @@ const CreateKendaraanPage = () => {
                 {/* No BPKB */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    No BPKB:
+                    No BPKB*:
                   </Typography>
                   <Input
                     value={kendaraan.no_bpkb}
@@ -914,7 +994,7 @@ const CreateKendaraanPage = () => {
                 {/* No Rangka */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    No Rangka:
+                    No Rangka*:
                   </Typography>
                   <Input
                     value={kendaraan.no_rangka}
@@ -941,7 +1021,7 @@ const CreateKendaraanPage = () => {
                 {/* No Mesin */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    No Mesin:
+                    No Mesin*:
                   </Typography>
                   <Input
                     value={kendaraan.no_mesin}
@@ -968,7 +1048,7 @@ const CreateKendaraanPage = () => {
                 {/* Kode Jenis */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Kode Jenis:
+                    Kode Jenis*:
                   </Typography>
                   <Input
                     value={kendaraan.kode_jenis}
@@ -997,7 +1077,7 @@ const CreateKendaraanPage = () => {
                 {/* Nama Pemilik */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Nama Pemilik:
+                    Nama Pemilik*:
                   </Typography>
                   <Input
                     value={kendaraan.nama_pemilik}
@@ -1051,7 +1131,7 @@ const CreateKendaraanPage = () => {
                 {/* No Telp */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    No Telp:
+                    No Telp*:
                   </Typography>
                   <Input
                     value={kendaraan.no_telp}
@@ -1080,7 +1160,7 @@ const CreateKendaraanPage = () => {
                 {/* Alamat1 */}
                 <div className="flex flex-col gap-1 w-full ">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Alamat1:
+                    Alamat1*:
                   </Typography>
                   <Input
                     value={kendaraan.alamat1}
@@ -1163,7 +1243,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Jenis Kendaraan */}
                 <div className="flex flex-col gap-1 w-full ">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Jenis Kendaraan:
+                    ID Jenis Kendaraan*:
                   </Typography>
                   <Select
                     options={jenisKendaraanOptions}
@@ -1173,7 +1253,6 @@ const CreateKendaraanPage = () => {
                     placeholder="Pilih Jenis Kendaraan"
                     isSearchable
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    menuPortalTarget={document.body}
                     styles={{
                       control: (base, state) => ({
                         ...base,
@@ -1199,7 +1278,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Merk Kendaraan */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Merk Kendaraan:
+                    ID Merk Kendaraan*:
                   </Typography>
                   <Select
                     options={merkKendaraanOptions}
@@ -1209,7 +1288,6 @@ const CreateKendaraanPage = () => {
                     placeholder="Pilih Merk Kendaraan"
                     isSearchable
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900"
-                    menuPortalTarget={document.body}
                     styles={{
                       control: (base, state) => ({
                         ...base,
@@ -1235,7 +1313,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Type Kendaraan */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Type Kendaraan:
+                    ID Type Kendaraan*:
                   </Typography>
                   <Select
                     options={typeKendaraanOptions}
@@ -1245,7 +1323,6 @@ const CreateKendaraanPage = () => {
                     placeholder="Pilih Type Kendaraan"
                     isSearchable
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900"
-                    menuPortalTarget={document.body}
                     styles={{
                       control: (base, state) => ({
                         ...base,
@@ -1273,10 +1350,10 @@ const CreateKendaraanPage = () => {
                 {/* Id Model Kendaraan */}
                 <div className="flex flex-col gap-1 w-full ">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Model Kendaraan:
+                    ID Model Kendaraan*:
                   </Typography>
                   <Input
-                    value={`${kendaraan.id_jenis_kendaraan}${kendaraan.id_merk_kendaraan}${kendaraan.id_type_kendaraan}`}
+                    value={kendaraan.id_model_kendaraan}
                     onChange={handleChange}
                     name="id_model_kendaraan"
                     size="md"
@@ -1300,7 +1377,7 @@ const CreateKendaraanPage = () => {
                 {/* Tahun Buat */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Tahun Pembuatan:
+                    Tahun Pembuatan*:
                   </Typography>
                   <Input
                     value={kendaraan.tahun_buat}
@@ -1327,7 +1404,7 @@ const CreateKendaraanPage = () => {
                 {/* Tahun Rakit */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Tahun Perakitan:
+                    Tahun Perakitan*:
                   </Typography>
                   <Input
                     value={kendaraan.tahun_rakit}
@@ -1356,7 +1433,7 @@ const CreateKendaraanPage = () => {
                 {/* Tahun UB */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Tahun UB:
+                    Tahun UB*:
                   </Typography>
                   <Input
                     value={kendaraan.tahun_ub}
@@ -1383,7 +1460,7 @@ const CreateKendaraanPage = () => {
                 {/* Cylinder */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Cylinder:
+                    Cylinder*:
                   </Typography>
                   <Input
                     value={kendaraan.cylinder}
@@ -1410,7 +1487,7 @@ const CreateKendaraanPage = () => {
                 {/* Warna Kendaraan */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Warna Kendaraan:
+                    Warna Kendaraan*:
                   </Typography>
                   <Input
                     value={kendaraan.warna_kendaraan}
@@ -1439,7 +1516,7 @@ const CreateKendaraanPage = () => {
                 {/* Jumlah Sumbu */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Jumlah Sumbu:
+                    Jumlah Sumbu*:
                   </Typography>
                   <Input
                     value={kendaraan.jumlah_sumbu}
@@ -1466,7 +1543,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Golongan Kendaraan */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Golongan Kendaraan:
+                    ID Golongan Kendaraan*:
                   </Typography>
                   <Input
                     value={kendaraan.id_golongan_kendaraan}
@@ -1493,7 +1570,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Warna TNKB */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Warna TNKB:
+                    ID Warna TNKB*:
                   </Typography>
                   <Input
                     value={kendaraan.id_warna_tnkb}
@@ -1522,7 +1599,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Fungsi Kendaraan */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Fungsi Kendaraan:
+                    ID Fungsi Kendaraan*:
                   </Typography>
                   <Input
                     value={kendaraan.id_fungsi_kendaraan}
@@ -1549,7 +1626,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Bahan Bakar */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Bahan Bakar:
+                    ID Bahan Bakar*:
                   </Typography>
                   <Input
                     value={kendaraan.id_bahan_bakar}
@@ -1601,7 +1678,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Lokasi */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Lokasi:
+                    ID Lokasi*:
                   </Typography>
                   <Input
                     value={kendaraan.id_lokasi}
@@ -1628,7 +1705,7 @@ const CreateKendaraanPage = () => {
                 {/* Dati2 Induk */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Dati2 Induk:
+                    Dati2 Induk*:
                   </Typography>
                   <Input
                     value={kendaraan.dati2_induk}
@@ -1680,7 +1757,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Jenis Map */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Jenis Map:
+                    ID Jenis Map*:
                   </Typography>
                   <Input
                     value={kendaraan.id_jenis_map}
@@ -1707,7 +1784,7 @@ const CreateKendaraanPage = () => {
                 {/* Id Lokasi Proses */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Lokasi Proses:
+                    ID Lokasi Proses*:
                   </Typography>
                   <Input
                     value={kendaraan.id_lokasi_proses}
@@ -1734,7 +1811,7 @@ const CreateKendaraanPage = () => {
                 {/* Dati2 Proses */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Dati2 Proses:
+                    Dati2 Proses*:
                   </Typography>
                   <Input
                     value={kendaraan.dati2_proses}
@@ -1790,7 +1867,7 @@ const CreateKendaraanPage = () => {
                 {/* BBN 1 POKOK */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    BBN 1 Pokok:
+                    BBN 1 Pokok*:
                   </Typography>
                   <Input
                     value={kendaraan.bbn1_pokok}
@@ -1846,7 +1923,7 @@ const CreateKendaraanPage = () => {
                 {/* PKB Pokok */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    PKB Pokok:
+                    PKB Pokok*:
                   </Typography>
                   <Input
                     value={kendaraan.pkb_pokok}
@@ -1929,7 +2006,7 @@ const CreateKendaraanPage = () => {
                 {/* SWDKLLJ Pokok */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    SWDKLLJ Pokok:
+                    SWDKLLJ Pokok*:
                   </Typography>
                   <Input
                     value={kendaraan.swdkllj_pokok}
@@ -1983,7 +2060,7 @@ const CreateKendaraanPage = () => {
                 {/* STNK */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    STNK:
+                    STNK*:
                   </Typography>
                   <Input
                     value={kendaraan.stnk}
@@ -2012,7 +2089,7 @@ const CreateKendaraanPage = () => {
                 {/* Nomor SKPD */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Nomor SKPD:
+                    Nomor SKPD*:
                   </Typography>
                   <Input
                     value={kendaraan.no_skpd}
@@ -2039,7 +2116,7 @@ const CreateKendaraanPage = () => {
                 {/* Nomor Kohir */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Nomor Kohir:
+                    Nomor Kohir*:
                   </Typography>
                   <Input
                     value={kendaraan.no_kohir}
@@ -2066,7 +2143,7 @@ const CreateKendaraanPage = () => {
                 {/* Nomor SKUM */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Nomor SKUM:
+                    Nomor SKUM*:
                   </Typography>
                   <Input
                     value={kendaraan.no_skum}
@@ -2149,7 +2226,7 @@ const CreateKendaraanPage = () => {
                 {/* NJKB */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    NJKB:
+                    NJKB*:
                   </Typography>
                   <Input
                     value={kendaraan.njkb}
@@ -2178,7 +2255,7 @@ const CreateKendaraanPage = () => {
                 {/* Kode Pembayaran */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Kode Pembayaran:
+                    Kode Pembayaran*:
                   </Typography>
                   <Input
                     value={kendaraan.kode_pembayaran}
@@ -2256,19 +2333,323 @@ const CreateKendaraanPage = () => {
                   )}
                 </div>
               </div>
+
+              <div className="flex flex-col lg:flex-row gap-4 items-center justify-between w-full h-full ">
+                {/* Id Status */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    ID Status*:
+                  </Typography>
+                  <Input
+                    value={kendaraan.id_status}
+                    onChange={handleChange}
+                    name="id_status"
+                    size="md"
+                    placeholder="Id Status"
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    crossOrigin={undefined}
+                  />
+                  {errors.id_status && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.id_status}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tahun Berlaku */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tahun Berlaku*:
+                  </Typography>
+                  <Input
+                    value={kendaraan.tahun_berlaku}
+                    onChange={handleChange}
+                    name="tahun_berlaku"
+                    size="md"
+                    placeholder="Tahun Berlaku"
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    crossOrigin={undefined}
+                  />
+                  {errors.tahun_berlaku && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tahun_berlaku}
+                    </Typography>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-1 w-full"></div>
+              </div>
+
+              <div className="flex flex-col lg:flex-row gap-4 items-center justify-between w-full h-full ">
+                {/* Tanggal Faktur */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Faktur*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_faktur}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_faktur")}
+                  />
+                  {errors.tanggal_faktur && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_faktur}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tanggal Kwitansi */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Kwitansi*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_kwitansi}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_kwitansi")}
+                  />
+                  {errors.tanggal_kwitansi && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_kwitansi}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tanggal Akhir STNK */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Akhir STNK*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_akhir_stnk}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_akhir_stnk")}
+                  />
+                  {errors.tanggal_akhir_stnk && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_akhir_stnk}
+                    </Typography>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col lg:flex-row gap-4 items-center justify-between w-full h-full ">
+                {/* Tanggal Akhir STNK Lama */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Akhir STNK Lama*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_akhir_stnk_lama}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_akhir_stnk_lama")}
+                  />
+                  {errors.tanggal_akhir_stnk_lama && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_akhir_stnk_lama}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tanggal Jatuh Tempo */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Jatuh Tempo*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_jatuh_tempo}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo")}
+                  />
+                  {errors.tanggal_jatuh_tempo && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_jatuh_tempo}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tanggal Jatuh Tempo Lama */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Jatuh Tempo Lama*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_jatuh_tempo_lama}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo_lama")}
+                  />
+                  {errors.tanggal_jatuh_tempo_lama && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_jatuh_tempo_lama}
+                    </Typography>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col lg:flex-row gap-4 items-center justify-between w-full h-full ">
+                {/* Tanggal Daftar */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Daftar*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_daftar}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_daftar")}
+                  />
+                  {errors.tanggal_daftar && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_daftar}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tanggal Bayar */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Bayar*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_bayar}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_bayar")}
+                  />
+                  {errors.tanggal_bayar && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_bayar}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tanggal Jatuh Tempo DPWKP */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Jatuh Tempo DPWKP:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_jatuh_tempo_dpwkp}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo_dpwkp")}
+                  />
+                  {errors.tanggal_jatuh_tempo_dpwkp && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_jatuh_tempo_dpwkp}
+                    </Typography>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col lg:flex-row gap-4 items-center justify-between w-full h-full ">
+                {/* Tanggal Maks Bayar PKB */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Maks Bayar PKB*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_max_bayar_pkb}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_pkb")}
+                  />
+                  {errors.tanggal_max_bayar_pkb && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_max_bayar_pkb}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tanggal Maks Bayar SWDKLLJ */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Maks Bayar SWDKLLJ*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_max_bayar_swdkllj}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_swdkllj")}
+                  />
+                  {errors.tanggal_max_bayar_swdkllj && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_max_bayar_swdkllj}
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Tanggal Maks Bayar BBN */}
+                <div className="flex flex-col gap-1 w-full">
+                  <Typography color="black" variant="paragraph" placeholder={undefined}>
+                    Tanggal Maks Bayar BBN*:
+                  </Typography>
+                  <DatePicker
+                    className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
+                    value={kendaraan.tanggal_max_bayar_bbn}
+                    onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_bbn")}
+                  />
+                  {errors.tanggal_max_bayar_bbn && (
+                    <Typography
+                      className="!text-overline pl-2 text-danger-400"
+                      placeholder={undefined}
+                    >
+                      {errors.tanggal_max_bayar_bbn}
+                    </Typography>
+                  )}
+                </div>
+              </div>
             </form>
           </CardBody>
 
           <CardFooter placeholder={undefined}>
             <div className="flex justify-end gap-4">
               <Button
-                className="!bg-blue-700 min-w-24"
-                size="sm"
+                className="bg-gradient-to-tr from-primary-500 to-primary-400"
+                children="Simpan"
                 onClick={handleSubmit}
                 placeholder={undefined}
-              >
-                Buat
-              </Button>
+              />
             </div>
           </CardFooter>
         </Card>
