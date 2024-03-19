@@ -30,6 +30,7 @@ interface DataTableProps {
   handleSearch: (nama_negara: string) => void;
   handleDetail: (uid: string) => void;
   handleDelete: (uid: string) => void;
+  handleEdit: (uid: string) => void;
   handleCreate: () => void;
 }
 
@@ -74,6 +75,10 @@ const DataTable = (props: DataTableProps) => {
 
   const handleDetail = (uid: string) => {
     props.handleDetail(uid);
+  };
+
+  const handleEdit = (uid: string) => {
+    props.handleEdit(uid);
   };
 
   const handleCreate = () => {
@@ -193,7 +198,11 @@ const DataTable = (props: DataTableProps) => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip content={`Edit ${props.title.toLocaleLowerCase()}`}>
-                      <IconButton variant="text" placeholder={undefined}>
+                      <IconButton
+                        variant="text"
+                        onClick={() => handleEdit(row["uid"])}
+                        placeholder={undefined}
+                      >
                         <PencilIcon className="h-6 w-6 text-yellow-600" />
                       </IconButton>
                     </Tooltip>

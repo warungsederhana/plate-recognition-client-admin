@@ -154,7 +154,9 @@ const LoginPage = () => {
                 </Button>
               </div>
 
-              <Typography className="py-4" placeholder={undefined} color="gray" variant="small">
+              {/* Login with Google */}
+
+              {/* <Typography className="py-4" placeholder={undefined} color="gray" variant="small">
                 Atau masuk dengan
               </Typography>
 
@@ -168,7 +170,7 @@ const LoginPage = () => {
                 >
                   Google
                 </Button>
-              </div>
+              </div> */}
             </div>
           </form>
         </Card>

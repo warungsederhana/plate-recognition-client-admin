@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 dayjs.locale("id");
 
-const CreateKendaraanPage = () => {
+const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
   const [kendaraan, setKendaraan] = useState({
     id: "",
@@ -172,6 +172,19 @@ const CreateKendaraanPage = () => {
   const [typeKendaraanOptions, setTypeKendaraanOptions] = useState([]);
 
   useEffect(() => {
+    const fetchDataKendaraan = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3344/api/kendaraan/${params.uid}`);
+        setKendaraan(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data kendaraan:", error);
+      }
+    };
+
+    fetchDataKendaraan();
+  }, [params.uid]);
+
+  useEffect(() => {
     // fetch jenis kendaraan options
     axios
       .get("http://localhost:3344/api/jenis-kendaraan")
@@ -210,7 +223,7 @@ const CreateKendaraanPage = () => {
         );
       })
       .catch((error) => console.error("Error fetching type kendaraan:", error));
-  }, []);
+  }, [params.uid]);
 
   useEffect(() => {
     setKendaraan((prevKendaraan) => ({
@@ -383,307 +396,246 @@ const CreateKendaraanPage = () => {
     if (!kendaraan.id) {
       newErrors.id = "ID harus diisi!";
       isValid = false;
-      console.log(`id kendaraan ${isValid}`);
     }
     if (!kendaraan.no_daftar) {
       newErrors.no_daftar = "Nomor daftar harus diisi!";
       isValid = false;
-      console.log(`no daftar ${isValid}`);
     }
     if (!kendaraan.no_daftar_eri) {
       newErrors.no_daftar_eri = "Nomor daftar ERI harus diisi!";
       isValid = false;
-      console.log(`no daftar eri ${isValid}`);
     }
     if (!kendaraan.id_kepemilikan) {
       newErrors.id_kepemilikan = "ID kepemilikan harus diisi!";
       isValid = false;
-      console.log(`id kepemilikan ${isValid}`);
     }
     if (!kendaraan.no_kk) {
       newErrors.no_kk = "Nomor KK harus diisi!";
       isValid = false;
-      console.log(`no kk ${isValid}`);
     }
     if (!kendaraan.no_polisi) {
       newErrors.no_polisi = "Nomor polisi harus diisi!";
       isValid = false;
-      console.log(`no polisi ${isValid}`);
     }
     if (!kendaraan.nama_pemilik) {
       newErrors.nama_pemilik = "Nama pemilik harus diisi!";
       isValid = false;
-      console.log(`nama pemilik ${isValid}`);
     }
     if (!kendaraan.alamat1) {
       newErrors.alamat1 = "Alamat 1 harus diisi!";
       isValid = false;
-      console.log(`alamat1 ${isValid}`);
     }
     if (!kendaraan.id_kelurahan) {
       newErrors.id_kelurahan = "ID kelurahan harus diisi!";
       isValid = false;
-      console.log(`id kelurahan ${isValid}`);
     }
     if (!kendaraan.no_telp) {
       newErrors.no_telp = "Nomor telepon harus diisi!";
       isValid = false;
-      console.log(`no telp ${isValid}`);
     }
     if (!kendaraan.id_jenis_kendaraan) {
       newErrors.id_jenis_kendaraan = "ID jenis kendaraan harus diisi!";
       isValid = false;
-      console.log(`id jenis kendaraan ${isValid}`);
     }
     if (!kendaraan.id_merk_kendaraan) {
       newErrors.id_merk_kendaraan = "ID merk kendaraan harus diisi!";
       isValid = false;
-      console.log(`id merk kendaraan ${isValid}`);
     }
     if (!kendaraan.id_type_kendaraan) {
       newErrors.id_type_kendaraan = "ID tipe kendaraan harus diisi!";
       isValid = false;
-      console.log(`id type kendaraan ${isValid}`);
     }
     if (!kendaraan.id_model_kendaraan) {
       newErrors.id_model_kendaraan = "ID model kendaraan harus diisi!";
       isValid = false;
-      console.log(`id model kendaraan ${isValid}`);
     }
     if (!kendaraan.id_jenis_map) {
       newErrors.id_jenis_map = "ID jenis MAP harus diisi!";
       isValid = false;
-      console.log(`id jenis map ${isValid}`);
     }
     if (!kendaraan.tahun_buat) {
       newErrors.tahun_buat = "Tahun pembuatan harus diisi!";
       isValid = false;
-      console.log(`tahun buat ${isValid}`);
     }
     if (!kendaraan.tahun_rakit) {
       newErrors.tahun_rakit = "Tahun perakitan harus diisi!";
       isValid = false;
-      console.log(`tahun rakit ${isValid}`);
     }
     if (!kendaraan.tahun_ub) {
       newErrors.tahun_ub = "Tahun UB harus diisi!";
       isValid = false;
-      console.log(`tahun ub ${isValid}`);
     }
     if (!kendaraan.cylinder) {
       newErrors.cylinder = "Cylinder harus diisi!";
       isValid = false;
-      console.log(`cylinder ${isValid}`);
     }
     if (!kendaraan.id_golongan_kendaraan) {
       newErrors.id_golongan_kendaraan = "ID golongan kendaraan harus diisi!";
       isValid = false;
-      console.log(`id golongan kendaraan ${isValid}`);
     }
     if (!kendaraan.id_warna_tnkb) {
       newErrors.id_warna_tnkb = "ID warna TNKB harus diisi!";
       isValid = false;
-      console.log(`id warna tnkb ${isValid}`);
     }
     if (!kendaraan.warna_kendaraan) {
       newErrors.warna_kendaraan = "Warna kendaraan harus diisi!";
       isValid = false;
-      console.log(`warna kendaraan ${isValid}`);
     }
     if (!kendaraan.id_lokasi) {
       newErrors.id_lokasi = "ID lokasi harus diisi!";
       isValid = false;
-      console.log(`id lokasi ${isValid}`);
     }
     if (!kendaraan.id_fungsi_kendaraan) {
       newErrors.id_fungsi_kendaraan = "ID fungsi kendaraan harus diisi!";
       isValid = false;
-      console.log(`id fungsi kendaraan ${isValid}`);
     }
     if (!kendaraan.id_bahan_bakar) {
       newErrors.id_bahan_bakar = "ID bahan bakar harus diisi!";
       isValid = false;
-      console.log(`id bahan bakar ${isValid}`);
     }
     if (!kendaraan.no_rangka) {
       newErrors.no_rangka = "Nomor rangka harus diisi!";
       isValid = false;
-      console.log(`no rangka ${isValid}`);
     }
     if (!kendaraan.no_mesin) {
       newErrors.no_mesin = "Nomor mesin harus diisi!";
       isValid = false;
-      console.log(`no mesin ${isValid}`);
     }
     if (!kendaraan.no_bpkb) {
       newErrors.no_bpkb = "Nomor BPKB harus diisi!";
       isValid = false;
-      console.log(`no bpkb ${isValid}`);
     }
     if (!kendaraan.jumlah_sumbu) {
       newErrors.jumlah_sumbu = "Jumlah sumbu harus diisi!";
       isValid = false;
-      console.log(`jumlah sumbu ${isValid}`);
     }
     if (!kendaraan.kode_jenis) {
       newErrors.kode_jenis = "Kode jenis harus diisi!";
       isValid = false;
-      console.log(`kode jenis ${isValid}`);
     }
     if (!kendaraan.progresif) {
       newErrors.progresif = "Progresif harus diisi!";
       isValid = false;
-      console.log(`progresif ${isValid}`);
     }
     if (!kendaraan.progresif_tarif) {
       newErrors.progresif_tarif = "Tarif progresif harus diisi!";
       isValid = false;
-      console.log(`progresif tarif ${isValid}`);
     }
     if (!kendaraan.id_pendaftaran) {
       newErrors.id_pendaftaran = "ID pendaftaran harus diisi!";
       isValid = false;
-      console.log(`id pendaftaran ${isValid}`);
     }
     if (!kendaraan.id_lokasi_proses) {
       newErrors.id_lokasi_proses = "ID lokasi proses harus diisi!";
       isValid = false;
-      console.log(`id lokasi proses ${isValid}`);
     }
     if (!kendaraan.dati2_induk) {
       newErrors.dati2_induk = "Dati2 induk harus diisi!";
       isValid = false;
-      console.log(`dati2 induk ${isValid}`);
     }
     if (!kendaraan.dati2_proses) {
       newErrors.dati2_proses = "Dati2 proses harus diisi!";
       isValid = false;
-      console.log(`dati2 proses ${isValid}`);
     }
     if (!kendaraan.tanggal_faktur) {
       newErrors.tanggal_faktur = "Tanggal faktur harus diisi!";
       isValid = false;
-      console.log(`tanggal faktur ${isValid}`);
     }
     if (!kendaraan.tanggal_kwitansi) {
       newErrors.tanggal_kwitansi = "Tanggal kwitansi harus diisi!";
       isValid = false;
-      console.log(`tanggal kwitansi ${isValid}`);
     }
     if (!kendaraan.tanggal_akhir_stnk) {
       newErrors.tanggal_akhir_stnk = "Tanggal akhir STNK harus diisi!";
       isValid = false;
-      console.log(`tanggal akhir stnk ${isValid}`);
     }
     if (!kendaraan.tanggal_akhir_stnk_lama) {
       newErrors.tanggal_akhir_stnk_lama = "Tanggal akhir STNK lama harus diisi!";
       isValid = false;
-      console.log(`tanggal akhir stnk lama ${isValid}`);
     }
     if (!kendaraan.tanggal_jatuh_tempo) {
       newErrors.tanggal_jatuh_tempo = "Tanggal jatuh tempo harus diisi!";
       isValid = false;
-      console.log(`tanggal jatuh tempo ${isValid}`);
     }
     if (!kendaraan.tanggal_jatuh_tempo_lama) {
       newErrors.tanggal_jatuh_tempo_lama = "Tanggal jatuh tempo lama harus diisi!";
       isValid = false;
-      console.log(`tanggal jatuh tempo lama ${isValid}`);
     }
     if (!kendaraan.id_status) {
       newErrors.id_status = "ID status harus diisi!";
       isValid = false;
-      console.log(`id status ${isValid}`);
     }
     if (!kendaraan.bbn1_pokok) {
       newErrors.bbn1_pokok = "BBN1 pokok harus diisi!";
       isValid = false;
-      console.log(`bbn1 pokok ${isValid}`);
     }
     if (!kendaraan.pkb_pokok) {
       newErrors.pkb_pokok = "PKB pokok harus diisi!";
       isValid = false;
-      console.log(`pkb pokok ${isValid}`);
     }
     if (!kendaraan.swdkllj_pokok) {
       newErrors.swdkllj_pokok = "SWDKLLJ pokok harus diisi!";
       isValid = false;
-      console.log(`swdkllj pokok ${isValid}`);
     }
     if (!kendaraan.stnk) {
       newErrors.stnk = "STNK harus diisi!";
       isValid = false;
-      console.log(`stnk ${isValid}`);
     }
     if (!kendaraan.no_skpd) {
       newErrors.no_skpd = "Nomor SKPD harus diisi!";
       isValid = false;
-      console.log(`no skpd ${isValid}`);
     }
     if (!kendaraan.no_kohir) {
       newErrors.no_kohir = "Nomor Kohir harus diisi!";
       isValid = false;
-      console.log(`no kohir ${isValid}`);
     }
     if (!kendaraan.no_skum) {
       newErrors.no_skum = "Nomor SKUM harus diisi!";
       isValid = false;
-      console.log(`no skum ${isValid}`);
     }
     if (!kendaraan.tanggal_daftar) {
       newErrors.tanggal_daftar = "Tanggal daftar harus diisi!";
       isValid = false;
-      console.log(`tanggal daftar ${isValid}`);
     }
     if (!kendaraan.tanggal_bayar) {
       newErrors.tanggal_bayar = "Tanggal bayar harus diisi!";
       isValid = false;
-      console.log(`tanggal bayar ${isValid}`);
     }
     if (!kendaraan.tahun_berlaku) {
       newErrors.tahun_berlaku = "Tahun berlaku harus diisi!";
       isValid = false;
-      console.log(`tahun berlaku ${isValid}`);
     }
     if (!kendaraan.tanggal_max_bayar_bbn) {
-      newErrors.tanggal_max_bayar_bbn = "Tanggal maksimal bayar PKB harus diisi!";
+      newErrors.tanggal_max_bayar_bbn = "Tanggal maksimal bayar BBN harus diisi!";
       isValid = false;
-      console.log(`tanggal max bayar bbn ${isValid}`);
     }
     if (!kendaraan.tanggal_max_bayar_pkb) {
       newErrors.tanggal_max_bayar_pkb = "Tanggal maksimal bayar PKB harus diisi!";
       isValid = false;
-      console.log(`tanggal max bayar pkb ${isValid}`);
     }
     if (!kendaraan.tanggal_max_bayar_swdkllj) {
       newErrors.tanggal_max_bayar_swdkllj = "Tanggal maksimal bayar SWDKLLJ harus diisi!";
       isValid = false;
-      console.log(`tanggal max bayar swdkllj ${isValid}`);
     }
     if (!kendaraan.kode_pembayaran) {
       newErrors.kode_pembayaran = "Kode pembayaran harus diisi!";
       isValid = false;
-      console.log(`kode pembayaran ${isValid}`);
     }
     if (!kendaraan.dpwkp) {
       newErrors.dpwkp = "DPWKP harus diisi!";
       isValid = false;
-      console.log(`dpwkp ${isValid}`);
     }
     if (!kendaraan.ket_dpwkp) {
       newErrors.ket_dpwkp = "Keterangan DPWKP harus diisi!";
       isValid = false;
-      console.log(`ket dpwkp ${isValid}`);
     }
     if (!kendaraan.tanggal_jatuh_tempo_dpwkp) {
       newErrors.tanggal_jatuh_tempo_dpwkp = "Tanggal jatuh tempo DPWKP harus diisi!";
       isValid = false;
-      console.log(`tanggal jatuh tempo dpwkp ${isValid}`);
     }
     if (!kendaraan.njkb) {
       newErrors.njkb = "NJKB harus diisi!";
       isValid = false;
-      console.log(`njkb ${isValid}`);
     }
 
     setErrors(newErrors);
@@ -695,7 +647,10 @@ const CreateKendaraanPage = () => {
     console.log(validate());
     if (validate()) {
       try {
-        const response = await axios.post("http://localhost:3344/api/kendaraan", kendaraan);
+        const response = await axios.put(
+          `http://localhost:3344/api/kendaraan/${params.uid}`,
+          kendaraan
+        );
         if (
           response.status === 201 ||
           response.statusText === "Created" ||
@@ -703,7 +658,7 @@ const CreateKendaraanPage = () => {
           response.statusText === "OK"
         ) {
           router.push("/dashboard/data/kendaraan");
-          toast.success("Berhasil menambahkan data kendaraan!");
+          toast.success("Data kendaraan berhasil diperbarui!");
         }
       } catch (error) {
         const axiosError = error as AxiosError<any>; // Type assertion
@@ -716,8 +671,8 @@ const CreateKendaraanPage = () => {
           console.log(axiosError.response.data?.message);
           toast.error(axiosError.response.data?.message);
         } else {
-          console.error("Error adding data kendaraan:", axiosError);
-          toast.error("Terjadi kesalahan saat menambahkan data kendaraan");
+          console.error("Error updating data kendaraan:", axiosError);
+          toast.error("Gagal memperbarui data kendaraan!");
         }
       }
     }
@@ -734,7 +689,7 @@ const CreateKendaraanPage = () => {
             placeholder={undefined}
           >
             <Typography color="blue-gray" variant="h5" placeholder={undefined}>
-              Halaman Tambah Kendaraan
+              Halaman Edit Kendaraan
             </Typography>
           </CardHeader>
 
@@ -747,6 +702,7 @@ const CreateKendaraanPage = () => {
                     ID*:
                   </Typography>
                   <Input
+                    disabled
                     value={kendaraan.id}
                     onChange={handleChange}
                     name="id"
@@ -1245,6 +1201,10 @@ const CreateKendaraanPage = () => {
                     ID Jenis Kendaraan*:
                   </Typography>
                   <Select
+                    value={jenisKendaraanOptions.find(
+                      (option: { value: string; label: string }) =>
+                        option.value === kendaraan.id_jenis_kendaraan
+                    )}
                     options={jenisKendaraanOptions}
                     onChange={(selectedOption) =>
                       handleSelectChange(selectedOption, "id_jenis_kendaraan")
@@ -1280,6 +1240,10 @@ const CreateKendaraanPage = () => {
                     ID Merk Kendaraan*:
                   </Typography>
                   <Select
+                    value={merkKendaraanOptions.find(
+                      (option: { value: string; label: string }) =>
+                        option.value === kendaraan.id_merk_kendaraan
+                    )}
                     options={merkKendaraanOptions}
                     onChange={(selectedOption) =>
                       handleSelectChange(selectedOption, "id_merk_kendaraan")
@@ -1315,6 +1279,10 @@ const CreateKendaraanPage = () => {
                     ID Type Kendaraan*:
                   </Typography>
                   <Select
+                    value={typeKendaraanOptions.find(
+                      (option: { value: string; label: string }) =>
+                        option.value === kendaraan.id_type_kendaraan
+                    )}
                     options={typeKendaraanOptions}
                     onChange={(selectedOption) =>
                       handleSelectChange(selectedOption, "id_type_kendaraan")
@@ -2399,7 +2367,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_faktur}
+                    value={dayjs(kendaraan.tanggal_faktur, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_faktur")}
                   />
                   {errors.tanggal_faktur && (
@@ -2419,7 +2387,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_kwitansi}
+                    value={dayjs(kendaraan.tanggal_kwitansi, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_kwitansi")}
                   />
                   {errors.tanggal_kwitansi && (
@@ -2439,7 +2407,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_akhir_stnk}
+                    value={dayjs(kendaraan.tanggal_akhir_stnk, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_akhir_stnk")}
                   />
                   {errors.tanggal_akhir_stnk && (
@@ -2461,7 +2429,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_akhir_stnk_lama}
+                    value={dayjs(kendaraan.tanggal_akhir_stnk_lama, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_akhir_stnk_lama")}
                   />
                   {errors.tanggal_akhir_stnk_lama && (
@@ -2481,7 +2449,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_jatuh_tempo}
+                    value={dayjs(kendaraan.tanggal_jatuh_tempo, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo")}
                   />
                   {errors.tanggal_jatuh_tempo && (
@@ -2501,7 +2469,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_jatuh_tempo_lama}
+                    value={dayjs(kendaraan.tanggal_jatuh_tempo_lama, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo_lama")}
                   />
                   {errors.tanggal_jatuh_tempo_lama && (
@@ -2523,7 +2491,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_daftar}
+                    value={dayjs(kendaraan.tanggal_daftar, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_daftar")}
                   />
                   {errors.tanggal_daftar && (
@@ -2543,7 +2511,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_bayar}
+                    value={dayjs(kendaraan.tanggal_bayar, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_bayar")}
                   />
                   {errors.tanggal_bayar && (
@@ -2563,7 +2531,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_jatuh_tempo_dpwkp}
+                    value={dayjs(kendaraan.tanggal_jatuh_tempo_dpwkp, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo_dpwkp")}
                   />
                   {errors.tanggal_jatuh_tempo_dpwkp && (
@@ -2585,7 +2553,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_max_bayar_pkb}
+                    value={dayjs(kendaraan.tanggal_max_bayar_pkb, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_pkb")}
                   />
                   {errors.tanggal_max_bayar_pkb && (
@@ -2605,7 +2573,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_max_bayar_swdkllj}
+                    value={dayjs(kendaraan.tanggal_max_bayar_swdkllj, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_swdkllj")}
                   />
                   {errors.tanggal_max_bayar_swdkllj && (
@@ -2625,7 +2593,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_max_bayar_bbn}
+                    value={dayjs(kendaraan.tanggal_max_bayar_bbn, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_bbn")}
                   />
                   {errors.tanggal_max_bayar_bbn && (
@@ -2644,11 +2612,21 @@ const CreateKendaraanPage = () => {
           <CardFooter placeholder={undefined}>
             <div className="flex justify-end gap-4">
               <Button
-                className="bg-gradient-to-tr from-primary-500 to-primary-400"
-                children="Simpan"
+                variant="text"
+                className="min-w-24"
+                color="blue-gray"
+                placeholder={undefined}
+                onClick={() => router.back()}
+              >
+                Batal
+              </Button>
+              <Button
+                className="!bg-primary-500 min-w-24"
                 onClick={handleSubmit}
                 placeholder={undefined}
-              />
+              >
+                Simpan
+              </Button>
             </div>
           </CardFooter>
         </Card>
@@ -2657,4 +2635,4 @@ const CreateKendaraanPage = () => {
   );
 };
 
-export default CreateKendaraanPage;
+export default EditKendaraanPage;
