@@ -15,7 +15,7 @@ import Sidebar from "./Sidebar";
 function NavList() {
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
-      <div className="flex flex-row gap-2 items-center">
+      {/* <div className="flex flex-row gap-2 items-center">
         <IconButton variant="text" size="lg" placeholder={undefined}>
           <UserCircleIcon className="h-7 w-7 hover:cursor-pointer" strokeWidth={1.5} />
         </IconButton>
@@ -28,7 +28,7 @@ function NavList() {
         >
           Profile
         </Typography>
-      </div>
+      </div> */}
       <div className="flex flex-row gap-2 items-center">
         <IconButton variant="text" size="lg" placeholder={undefined}>
           <ArrowRightStartOnRectangleIcon

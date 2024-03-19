@@ -26,6 +26,10 @@ const TypeKendaraanPage = () => {
     router.push(`/dashboard/data/type-kendaraan/detail/${uid}`);
   };
 
+  const handleEdit = (uid: string) => {
+    router.push(`/dashboard/data/type-kendaraan/edit/${uid}`);
+  };
+
   const handleDelete = async (uid: string) => {
     try {
       await axios.delete(`http://localhost:3344/api/type-kendaraan/${uid}`);
@@ -67,6 +71,7 @@ const TypeKendaraanPage = () => {
           handleDetail={handleDetail}
           handleDelete={handleDelete}
           handleCreate={handleCreate}
+          handleEdit={handleEdit}
         />
       </div>
     </>

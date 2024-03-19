@@ -49,6 +49,10 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
     fetchDataJenisKendaraan();
   }, [params.uid]);
 
+  const handleEdit = () => {
+    router.push(`/dashboard/data/jenis-kendaraan/edit/${params.uid}`);
+  };
+
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
@@ -219,14 +223,22 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
             <CardFooter placeholder={undefined}>
               <div className="flex justify-end gap-4">
                 <Button
+                  variant="text"
+                  className="min-w-24"
+                  color="blue-gray"
+                  placeholder={undefined}
+                  onClick={() => router.back()}
+                >
+                  Kembali
+                </Button>
+                <Button
                   className="!bg-yellow-700 min-w-24"
-                  size="sm"
                   children="Edit"
+                  onClick={handleEdit}
                   placeholder={undefined}
                 />
                 <Button
                   className="!bg-danger-400 min-w-24"
-                  size="sm"
                   children="Delete"
                   onClick={() => setOpenDeleteModal(true)}
                   placeholder={undefined}
