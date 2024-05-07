@@ -2664,10 +2664,11 @@ const CreateKendaraanPage = () => {
             <div className="flex justify-end gap-4">
               <Button
                 className="bg-gradient-to-tr from-primary-500 to-primary-400"
-                children="Simpan"
                 onClick={handleSubmit}
                 placeholder={undefined}
-              />
+              >
+                Simpan
+              </Button>
             </div>
           </CardFooter>
         </Card>

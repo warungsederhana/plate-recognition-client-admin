@@ -159,17 +159,19 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
                 <Button
                   className="!bg-yellow-700 min-w-24"
                   size="sm"
-                  children="Edit"
                   onClick={handleEdit}
                   placeholder={undefined}
-                />
+                >
+                  Edit
+                </Button>
                 <Button
                   className="!bg-danger-400 min-w-24"
                   size="sm"
-                  children="Delete"
                   onClick={() => setOpenDeleteModal(true)}
                   placeholder={undefined}
-                />
+                >
+                  Delete
+                </Button>
               </div>
             </CardFooter>
 

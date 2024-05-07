@@ -1206,16 +1206,18 @@ const DetailKendaraanPage = ({ params }: { params: { uid: string } }) => {
                 </Button>
                 <Button
                   className="!bg-yellow-700 min-w-24"
-                  children="Edit"
                   placeholder={undefined}
                   onClick={handleEdit}
-                />
+                >
+                  Edit
+                </Button>
                 <Button
                   className="!bg-danger-400 min-w-24"
-                  children="Delete"
                   onClick={() => setOpenDeleteModal(true)}
                   placeholder={undefined}
-                />
+                >
+                  Delete
+                </Button>
               </div>
             </CardFooter>
 
