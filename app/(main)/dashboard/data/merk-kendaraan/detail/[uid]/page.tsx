@@ -22,27 +22,35 @@ interface DataMerkKendaraan {
   uid: string;
   id: string;
   kode_negara_asal: string;
-  nama_merk: string;
+  nama_merek: string;
   createdAt: string;
   updatedAt: string;
 }
 
 const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
-  const [dataMerkKendaraan, setDataMerkKendaraan] = useState<DataMerkKendaraan>();
+  const [dataMerekKendaraan, setDataMerekKendaraan] = useState<DataMerekKendaraan>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
-    const fetchDataMerkKendaraan = async () => {
+    const fetchDataMerekKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/merk-kendaraan/${params.uid}`);
-        setDataMerkKendaraan(response.data.data);
+        const response = await axios.get(
+          `http://localhost:3344/api/merek-kendaraan/${params.uid}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setDataMerekKendaraan(response.data.data);
       } catch (error) {
-        console.error("Error fetching data merk kendaraan:", error);
+        console.error("Error fetching data merek kendaraan:", error);
       }
     };
 
-    fetchDataMerkKendaraan();
+    fetchDataMerekKendaraan();
   }, [params.uid]);
 
   const handleEdit = () => {
@@ -52,7 +60,12 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/merk-kendaraan/${dataMerkKendaraan?.uid}`
+        `http://localhost:3344/api/merek-kendaraan/${dataMerekKendaraan?.uid}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       );
       if (
         response.status === 201 ||
@@ -73,7 +86,7 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
   return (
     <>
       <div className="py-6 px-16 w-full h-full">
-        {dataMerkKendaraan ? (
+        {dataMerekKendaraan ? (
           <Card className="h-fit w-full" placeholder={undefined}>
             <CardHeader
               floated={false}
@@ -82,7 +95,7 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
               placeholder={undefined}
             >
               <Typography color="blue-gray" variant="h5" placeholder={undefined}>
-                Halaman Detail Merk Kendaraan
+                Halaman Detail Merek Kendaraan
               </Typography>
             </CardHeader>
 
@@ -93,7 +106,7 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
                     Id:
                   </Typography>
                   <Input
-                    value={dataMerkKendaraan.id}
+                    value={dataMerekKendaraan.id}
                     disabled
                     size="md"
                     placeholder="ID"
@@ -104,10 +117,10 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
 
                 <div className="flex flex-col gap-1">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    Nama Merk Kendaraan:
+                    Nama Merek Kendaraan:
                   </Typography>
                   <Input
-                    value={dataMerkKendaraan.nama_merk}
+                    value={dataMerekKendaraan.nama_merek}
                     disabled
                     size="md"
                     placeholder="ID"
@@ -121,7 +134,7 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
                     Kode Negara:
                   </Typography>
                   <Input
-                    value={dataMerkKendaraan.kode_negara_asal}
+                    value={dataMerekKendaraan.kode_negara_asal}
                     disabled
                     size="md"
                     placeholder="ID"

@@ -21,7 +21,7 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
     nama_type_kendaraan_eri: "",
     nama_type_kendaraan: "",
     id_jenis_kendaraan: "",
-    id_merk_kendaraan: "",
+    id_merek_kendaraan: "",
     kode_negara_asal: "",
   });
   const [errors, setErrors] = useState({
@@ -29,17 +29,22 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
     nama_type_kendaraan_eri: "",
     nama_type_kendaraan: "",
     id_jenis_kendaraan: "",
-    id_merk_kendaraan: "",
+    id_merek_kendaraan: "",
     kode_negara_asal: "",
   });
   const [jenisKendaraanOptions, setJenisKendaraanOptions] = useState([]);
-  const [merkKendaraanOptions, setMerkKendaraanOptions] = useState([]);
+  const [merekKendaraanOptions, setMerekKendaraanOptions] = useState([]);
   const [negaraAsalOptions, setNegaraAsalOptions] = useState([]);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDataTypeKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/type-kendaraan/${params.uid}`);
+        const response = await axios.get(`http://localhost:3344/api/type-kendaraan/${params.uid}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setTypeKendaraan(response.data.data);
       } catch (error) {
         console.error("Error fetching data type kendaraan:", error);
@@ -52,7 +57,11 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
   useEffect(() => {
     // Fetch jenis kendaraan options
     axios
-      .get("http://localhost:3344/api/jenis-kendaraan")
+      .get("http://localhost:3344/api/jenis-kendaraan", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
         setJenisKendaraanOptions(
           response.data.data.map((jenis: any) => ({
@@ -63,22 +72,30 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
       })
       .catch((error) => console.error("Error fetching jenis kendaraan:", error));
 
-    // Fetch merk kendaraan options
+    // Fetch merek kendaraan options
     axios
-      .get("http://localhost:3344/api/merk-kendaraan")
+      .get("http://localhost:3344/api/merek-kendaraan", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
-        setMerkKendaraanOptions(
-          response.data.data.map((merk: any) => ({
-            value: merk.id,
-            label: merk.nama_merk,
+        setMerekKendaraanOptions(
+          response.data.data.map((merek: any) => ({
+            value: merek.id,
+            label: merek.nama_merek,
           }))
         );
       })
-      .catch((error) => console.error("Error fetching merk kendaraan:", error));
+      .catch((error) => console.error("Error fetching merek kendaraan:", error));
 
     // Fetch negara asal options
     axios
-      .get("http://localhost:3344/api/negara-asal")
+      .get("http://localhost:3344/api/negara-asal", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
         setNegaraAsalOptions(
           response.data.data.map((negara: any) => ({
@@ -127,7 +144,7 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
       nama_type_kendaraan_eri: "",
       nama_type_kendaraan: "",
       id_jenis_kendaraan: "",
-      id_merk_kendaraan: "",
+      id_merek_kendaraan: "",
       kode_negara_asal: "",
     };
 
@@ -154,11 +171,11 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
       newErrors.id = "ID jenis kendaraan harus berupa 3 angka bulat!";
       isValid = false;
     }
-    if (!typeKendaraan.id_merk_kendaraan) {
-      newErrors.id_merk_kendaraan = "ID merk kendaraan harus diisi!";
+    if (!typeKendaraan.id_merek_kendaraan) {
+      newErrors.id_merek_kendaraan = "ID merek kendaraan harus diisi!";
       isValid = false;
-    } else if (!/^\d{3}$/.test(typeKendaraan.id_merk_kendaraan)) {
-      newErrors.id = "ID merk kendaraan harus berupa 3 angka bulat!";
+    } else if (!/^\d{3}$/.test(typeKendaraan.id_merek_kendaraan)) {
+      newErrors.id = "ID merek kendaraan harus berupa 3 angka bulat!";
       isValid = false;
     }
     if (!typeKendaraan.kode_negara_asal) {
@@ -176,7 +193,12 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
       try {
         const response = await axios.put(
           `http://localhost:3344/api/type-kendaraan/${params.uid}`,
-          typeKendaraan
+          typeKendaraan,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
         );
 
         if (
@@ -373,16 +395,16 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
 
                 <div className="w-full flex flex-col gap-1">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Merk Kendaraan:
+                    ID Merek Kendaraan:
                   </Typography>
                   <Select
-                    value={merkKendaraanOptions.find(
+                    value={merekKendaraanOptions.find(
                       (option: { value: string; label: string }) =>
-                        option.value === typeKendaraan.id_merk_kendaraan
+                        option.value === typeKendaraan.id_merek_kendaraan
                     )}
-                    options={merkKendaraanOptions}
-                    onChange={(option) => handleSelectChange(option, "id_merk_kendaraan")}
-                    placeholder="Pilih Merk Kendaraan"
+                    options={merekKendaraanOptions}
+                    onChange={(option) => handleSelectChange(option, "id_merek_kendaraan")}
+                    placeholder="Pilih Merek Kendaraan"
                     isSearchable
                     className={`${inputClass}`}
                     menuPortalTarget={document.body}
@@ -398,12 +420,12 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
                       menuPortal: (base) => ({ ...base, zIndex: 100 }),
                     }}
                   />
-                  {errors.id_merk_kendaraan && (
+                  {errors.id_merek_kendaraan && (
                     <Typography
                       className="!text-overline pl-2 text-danger-400"
                       placeholder={undefined}
                     >
-                      {errors.id_merk_kendaraan}
+                      {errors.id_merek_kendaraan}
                     </Typography>
                   )}
                 </div>

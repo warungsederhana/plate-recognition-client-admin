@@ -33,13 +33,22 @@ const CreateJenisKendaraanPage = () => {
     id_model_kendaraan: "",
     kategori_jenis: "",
   });
+  const token = localStorage.getItem("access_token");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     let newValue = value;
 
     // Ubah input menjadi huruf kapital untuk field tertentu
-    if (["id", "id_jenis_mapping", "id_model_kendaraan", "kategori_jenis"].includes(name)) {
+    if (
+      [
+        "id",
+        "id_jenis_mapping",
+        "id_model_kendaraan",
+        "kategori_jenis",
+        "kode_jenis_kendaraan",
+      ].includes(name)
+    ) {
       newValue = value.toUpperCase();
     }
 
@@ -120,7 +129,12 @@ const CreateJenisKendaraanPage = () => {
       try {
         const response = await axios.post(
           "http://localhost:3344/api/jenis-kendaraan",
-          jenisKendaraan
+          jenisKendaraan,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
         );
 
         if (

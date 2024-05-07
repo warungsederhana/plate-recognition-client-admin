@@ -22,7 +22,7 @@ const DashboardTable = (props: DashboardTableProps) => {
         </Typography>
       </CardHeader>
 
-      <CardBody placeholder={undefined} className="overflow-scroll px-0">
+      <CardBody placeholder={undefined} className="overflow-scroll px-0 pb-0">
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
@@ -46,9 +46,9 @@ const DashboardTable = (props: DashboardTableProps) => {
               })}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="">
             {TABLE_ROWS.map((row, index) => {
-              const classes = "py-4 px-8 border-r border-solid border-neutrals-300";
+              const classes = "py-3 px-8 border-r border-solid border-neutrals-300";
 
               return (
                 <tr key={index}>

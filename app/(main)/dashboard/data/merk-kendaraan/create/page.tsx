@@ -16,23 +16,28 @@ import { useRouter } from "next/navigation";
 
 const CreateMerkKendaraanPage = () => {
   const router = useRouter();
-  const [merkKendaraan, setMerkKendaraan] = useState({
+  const [merekKendaraan, setMerekKendaraan] = useState({
     id: "",
-    nama_merk: "",
+    nama_merek: "",
     kode_negara_asal: "",
   });
   const [errors, setErrors] = useState({
     id: "",
-    nama_merk: "",
+    nama_merek: "",
     kode_negara_asal: "",
   });
   const [db_kode_negara_asal, setDbKodeNegaraAsal] = useState([]);
   const isFetched = useRef(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3344/api/negara-asal");
+        const response = await axios.get("http://localhost:3344/api/negara-asal", {
+          headers: {
+            Authorization: token,
+          },
+        });
         console.log(response);
         setDbKodeNegaraAsal(
           response.data.data.map((negara: any) => ({
@@ -53,8 +58,8 @@ const CreateMerkKendaraanPage = () => {
   }, []);
 
   const handleChangeSelect = (selectedOption: any) => {
-    setMerkKendaraan({
-      ...merkKendaraan,
+    setMerekKendaraan({
+      ...merekKendaraan,
       kode_negara_asal: selectedOption.value,
     });
   };
@@ -66,8 +71,8 @@ const CreateMerkKendaraanPage = () => {
     // Ubah input menjadi huruf kapital untuk field tertentu
     if (["kode_negara_asal"].includes(name)) newValue = value.toUpperCase();
 
-    setMerkKendaraan({
-      ...merkKendaraan,
+    setMerekKendaraan({
+      ...merekKendaraan,
       [name]: newValue,
     });
     setErrors({
@@ -80,22 +85,22 @@ const CreateMerkKendaraanPage = () => {
     let isValid = true;
     let newErrors = {
       id: "",
-      nama_merk: "",
+      nama_merek: "",
       kode_negara_asal: "",
     };
 
-    if (!merkKendaraan.id) {
+    if (!merekKendaraan.id) {
       newErrors.id = "ID harus diisi!";
       isValid = false;
-    } else if (!/^\d{3}$/.test(merkKendaraan.id)) {
+    } else if (!/^\d{3}$/.test(merekKendaraan.id)) {
       newErrors.id = "ID harus berupa 3 angka bulat!";
       isValid = false;
     }
-    if (!merkKendaraan.nama_merk) {
-      newErrors.nama_merk = "Nama merk kendaraan harus diisi!";
+    if (!merekKendaraan.nama_merek) {
+      newErrors.nama_merek = "Nama merek kendaraan harus diisi!";
       isValid = false;
     }
-    if (!merkKendaraan.kode_negara_asal) {
+    if (!merekKendaraan.kode_negara_asal) {
       newErrors.kode_negara_asal = "Kode negara asal harus diisi!";
       isValid = false;
     }
@@ -106,11 +111,16 @@ const CreateMerkKendaraanPage = () => {
 
   const handleSubmit = async () => {
     if (validate()) {
-      console.log(merkKendaraan.kode_negara_asal);
+      console.log(merekKendaraan.kode_negara_asal);
       try {
         const response = await axios.post(
-          "http://localhost:3344/api/merk-kendaraan",
-          merkKendaraan
+          "http://localhost:3344/api/merek-kendaraan",
+          merekKendaraan,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
         );
 
         if (
@@ -120,7 +130,7 @@ const CreateMerkKendaraanPage = () => {
           response.statusText === "OK"
         ) {
           router.push("/dashboard/data/merk-kendaraan");
-          toast.success(`Berhasil menambahkan data merk kendaraan ${merkKendaraan.nama_merk}!`);
+          toast.success(`Berhasil menambahkan data merek kendaraan ${merekKendaraan.nama_merek}!`);
         }
       } catch (error) {
         const axiosError = error as AxiosError<any>; // Type assertion
@@ -133,8 +143,8 @@ const CreateMerkKendaraanPage = () => {
           console.log(axiosError.response.data?.message);
           toast.error(axiosError.response.data?.message);
         } else {
-          console.error("Error adding data merk kendaraan:", axiosError);
-          toast.error("Terjadi kesalahan saat menambahkan data merk kendaraan");
+          console.error("Error adding data merek kendaraan:", axiosError);
+          toast.error("Terjadi kesalahan saat menambahkan data merek kendaraan");
         }
       }
     }
@@ -151,7 +161,7 @@ const CreateMerkKendaraanPage = () => {
             placeholder={undefined}
           >
             <Typography color="blue-gray" variant="h5" placeholder={undefined}>
-              Halaman Tambah Merk Kendaraan
+              Halaman Tambah Merek Kendaraan
             </Typography>
           </CardHeader>
 
@@ -165,7 +175,7 @@ const CreateMerkKendaraanPage = () => {
                   ID*:
                 </Typography>
                 <Input
-                  value={merkKendaraan.id}
+                  value={merekKendaraan.id}
                   onChange={handleChange}
                   name="id"
                   size="md"
@@ -188,26 +198,26 @@ const CreateMerkKendaraanPage = () => {
 
               <div className="w-full flex flex-col gap-1">
                 <Typography color="black" variant="paragraph" placeholder={undefined}>
-                  Nama Merk Kendaraan*:
+                  Nama Merek Kendaraan*:
                 </Typography>
                 <Input
-                  value={merkKendaraan.nama_merk}
+                  value={merekKendaraan.nama_merek}
                   onChange={handleChange}
-                  name="nama_merk"
+                  name="nama_merek"
                   size="md"
-                  placeholder="Nama Merk Kendaraan"
+                  placeholder="Nama Merek Kendaraan"
                   className="w-full !border-t-blue-gray-200 focus:!border-t-gray-900"
                   labelProps={{
                     className: "before:content-none after:content-none",
                   }}
                   crossOrigin={undefined}
                 />
-                {errors.nama_merk && (
+                {errors.nama_merek && (
                   <Typography
                     className="!text-overline pl-2 text-danger-400"
                     placeholder={undefined}
                   >
-                    {errors.nama_merk}
+                    {errors.nama_merek}
                   </Typography>
                 )}
               </div>

@@ -36,7 +36,7 @@ interface DataKendaraan {
   id_kelurahan?: string;
   no_telp: string;
   id_jenis_kendaraan: string;
-  id_merk_kendaraan: string;
+  id_merek_kendaraan: string;
   id_type_kendaraan: string;
   id_model_kendaraan: string;
   id_jenis_map?: string;
@@ -101,11 +101,16 @@ const DetailKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
   const [dataKendaraan, setDataKendaraan] = useState<DataKendaraan>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDataKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/kendaraan/${params.uid}`);
+        const response = await axios.get(`http://localhost:3344/api/kendaraan/${params.uid}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setDataKendaraan(response.data.data);
       } catch (error) {
         console.error("Error fetching data kendaraan:", error);
@@ -122,7 +127,12 @@ const DetailKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/kendaraan/${dataKendaraan?.uid}`
+        `http://localhost:3344/api/kendaraan/${dataKendaraan?.uid}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       );
       if (
         response.status === 201 ||
@@ -426,17 +436,17 @@ const DetailKendaraanPage = ({ params }: { params: { uid: string } }) => {
                   </div>
                   <div className="flex flex-col gap-1 w-full">
                     <Typography color="black" variant="paragraph" placeholder={undefined}>
-                      Id Merk Kendaraan:
+                      Id Merek Kendaraan:
                     </Typography>
                     <div className="max-w-96">
                       <Select
                         label="Select Version"
-                        value={dataKendaraan.id_merk_kendaraan}
+                        value={dataKendaraan.id_merek_kendaraan}
                         disabled
                         placeholder={undefined}
                       >
-                        <option value={dataKendaraan.id_merk_kendaraan}>
-                          {dataKendaraan.id_merk_kendaraan}
+                        <option value={dataKendaraan.id_merek_kendaraan}>
+                          {dataKendaraan.id_merek_kendaraan}
                         </option>
                       </Select>
                     </div>
