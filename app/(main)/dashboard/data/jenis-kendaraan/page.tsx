@@ -16,7 +16,7 @@ const JenisKendaraanPage = () => {
     "id_model_kendaraan",
     "kategori_jenis",
   ];
-
+  const token = localStorage.getItem("access_token");
   const router = useRouter();
 
   const handleSearch = (nama_jenis: string) => {
@@ -33,7 +33,11 @@ const JenisKendaraanPage = () => {
 
   const handleDelete = async (uid: string) => {
     try {
-      await axios.delete(`http://localhost:3344/api/jenis-kendaraan/${uid}`);
+      await axios.delete(`http://localhost:3344/api/jenis-kendaraan/${uid}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = dataJenisKendaraan.filter((item) => item.uid !== uid);
       setDataJenisKendaraan(data);
     } catch (error) {
@@ -47,9 +51,11 @@ const JenisKendaraanPage = () => {
 
   useEffect(() => {
     const fetchDataJenisKendaraan = async () => {
-      const res = await axios.get(
-        `http://localhost:3344/api/jenis-kendaraan/?nama_jenis_kendaraan=${search}`
-      );
+      const res = await axios.get(`http://localhost:3344/api/jenis-kendaraan/`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
         delete item.updatedAt;
@@ -60,7 +66,7 @@ const JenisKendaraanPage = () => {
     };
 
     fetchDataJenisKendaraan();
-  }, [search]);
+  }, []);
   return (
     <>
       <div className="pt-6 px-16">

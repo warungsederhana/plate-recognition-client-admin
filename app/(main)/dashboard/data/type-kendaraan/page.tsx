@@ -12,10 +12,10 @@ const TypeKendaraanPage = () => {
     "nama_type_kendaraan",
     "nama_type_kendaraan_eri",
     "id_jenis_kendaraan",
-    "id_merk_kendaraan",
+    "id_merek_kendaraan",
     "kode_negara_asal",
   ];
-
+  const token = localStorage.getItem("access_token");
   const router = useRouter();
 
   const handleSearch = (nama_type: string) => {
@@ -32,7 +32,11 @@ const TypeKendaraanPage = () => {
 
   const handleDelete = async (uid: string) => {
     try {
-      await axios.delete(`http://localhost:3344/api/type-kendaraan/${uid}`);
+      await axios.delete(`http://localhost:3344/api/type-kendaraan/${uid}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = dataTypeKendaraan.filter((item) => item.uid !== uid);
       setDataTypeKendaraan(data);
     } catch (error) {
@@ -46,9 +50,11 @@ const TypeKendaraanPage = () => {
 
   useEffect(() => {
     const fetchDataTypeKendaraan = async () => {
-      const res = await axios.get(
-        `http://localhost:3344/api/type-kendaraan/?nama_type_kendaraan=${search}`
-      );
+      const res = await axios.get(`http://localhost:3344/api/type-kendaraan/`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
         delete item.updatedAt;
@@ -59,7 +65,7 @@ const TypeKendaraanPage = () => {
     };
 
     fetchDataTypeKendaraan();
-  }, [search]);
+  }, []);
   return (
     <>
       <div className="pt-6 px-16">

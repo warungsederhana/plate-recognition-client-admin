@@ -25,11 +25,16 @@ const EditNegaraPage = ({ params }: { params: { uid: string } }) => {
     nama_negara: "",
     kode_negara: "",
   });
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDataNegara = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/negara-asal/${params.uid}`);
+        const response = await axios.get(`http://localhost:3344/api/negara-asal/${params.uid}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setNegara(response.data.data);
       } catch (error) {
         console.error("Error fetching data negara:", error);
@@ -90,7 +95,12 @@ const EditNegaraPage = ({ params }: { params: { uid: string } }) => {
       try {
         const response = await axios.put(
           `http://localhost:3344/api/negara-asal/${params.uid}`,
-          negara
+          negara,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
         );
 
         if (

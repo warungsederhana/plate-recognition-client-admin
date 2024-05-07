@@ -22,7 +22,7 @@ const KendaraanPage = () => {
     "id_kelurahan",
     "no_telp",
     "id_jenis_kendaraan",
-    "id_merk_kendaraan",
+    "id_merek_kendaraan",
     "id_type_kendaraan",
     "id_model_kendaraan",
     "id_jenis_map",
@@ -80,8 +80,27 @@ const KendaraanPage = () => {
     "subsidi",
     "njkb",
   ];
-
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    const fetchDataKendaraan = async () => {
+      const res = await axios.get(`http://localhost:3344/api/kendaraan/`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const data = res.data.data.map((item: any) => {
+        delete item.createdAt;
+        delete item.updatedAt;
+        return item;
+      });
+      console.log(data);
+      setDataKendaraan([...data]);
+    };
+
+    fetchDataKendaraan();
+  }, []);
 
   const handleSearch = (nama_kendaraan: string) => {
     setSearch(nama_kendaraan);
@@ -96,8 +115,13 @@ const KendaraanPage = () => {
   };
 
   const handleDelete = async (uid: string) => {
+    const token = localStorage.getItem("access_token");
     try {
-      await axios.delete(`http://localhost:3344/api/kendaraan/${uid}`);
+      await axios.delete(`http://localhost:3344/api/kendaraan/${uid}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = dataKendaraan.filter((item) => item.uid !== uid);
       setDataKendaraan(data);
     } catch (error) {
@@ -108,21 +132,6 @@ const KendaraanPage = () => {
   const handleCreate = () => {
     router.push("/dashboard/data/kendaraan/create");
   };
-
-  useEffect(() => {
-    const fetchDataKendaraan = async () => {
-      const res = await axios.get(`http://localhost:3344/api/kendaraan/?nama_kendaraan=${search}`);
-      const data = res.data.data.map((item: any) => {
-        delete item.createdAt;
-        delete item.updatedAt;
-        return item;
-      });
-      console.log(data);
-      setDataKendaraan([...data]);
-    };
-
-    fetchDataKendaraan();
-  }, [search]);
 
   return (
     <>

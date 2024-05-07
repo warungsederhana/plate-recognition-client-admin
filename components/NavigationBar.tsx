@@ -11,8 +11,24 @@ import {
   ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import Sidebar from "./Sidebar";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { destroyCookie } from "nookies";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 function NavList() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    destroyCookie(null, "access_token", {
+      path: "/",
+    });
+    localStorage.removeItem("access_token");
+    router.push("/");
+    toast.success("Logout berhasil");
+  };
+
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       {/* <div className="flex flex-row gap-2 items-center">
@@ -29,14 +45,13 @@ function NavList() {
           Profile
         </Typography>
       </div> */}
-      <div className="flex flex-row gap-2 items-center">
+      <div className="flex flex-row gap-2 items-center" onClick={handleLogout}>
         <IconButton variant="text" size="lg" placeholder={undefined}>
           <ArrowRightStartOnRectangleIcon
             className="h-7 w-7 hover:cursor-pointer"
             strokeWidth={1.5}
           />
         </IconButton>
-
         <Typography
           as="li"
           variant="paragraph"

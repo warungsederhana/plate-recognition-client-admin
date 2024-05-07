@@ -13,49 +13,72 @@ interface DataItem {
 const DashboardPage = () => {
   const [cardData, setCardData] = useState<DataItem[]>([]);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const isFetched = useRef(false);
 
   useEffect(() => {
-    const fetchCardData = async (endpoint: string) => {
-      const res = await axios.get(`http://localhost:3344/api/${endpoint}`);
-      const fetchedData: DataItem = {
-        title: res.data.title,
-        size: res.data.size,
-        data: res.data.data,
-      };
-      setCardData((prevData) => {
-        const newData = [...prevData, fetchedData];
-        return newData.sort((a, b) => a.title.localeCompare(b.title));
-      });
-    };
+    const token = localStorage.getItem("access_token");
 
-    const fetchTableData = async (endpoint: string) => {
-      const res = await axios.get(`http://localhost:3344/api/${endpoint}/latest`);
-      console.log(`data fetched from ${endpoint}`, res.data);
-      const fetchedData: any = {
-        title: res.data.title,
-        data: res.data.data,
-      };
-      setTableData((prevData) => {
-        const newData = [...prevData, fetchedData];
-        return newData.sort((a, b) => a.title.localeCompare(b.title));
-      });
+    const fetchData = async () => {
+      setIsLoading(true);
+      if (!isFetched.current) {
+        const res = await axios.get("http://localhost:3344/api/main", {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const allData = res.data.data;
+        const jenisKendaraan: DataItem = allData.jenisKendaraan;
+        const kendaraan: DataItem = allData.kendaraan;
+        const merekKendaraan: DataItem = allData.merekKendaraan;
+        const negaraAsal: DataItem = allData.negaraAsal;
+        const typeKendaraan: DataItem = allData.typeKendaraan;
+
+        setCardData(
+          [jenisKendaraan, kendaraan, merekKendaraan, negaraAsal, typeKendaraan].sort((a, b) =>
+            a.title.localeCompare(b.title)
+          )
+        );
+
+        const tableJenisKendaraan = {
+          ...jenisKendaraan,
+          data: jenisKendaraan.data.slice(0, 5),
+        };
+        const tableKendaraan = {
+          ...kendaraan,
+          data: kendaraan.data.slice(0, 5),
+        };
+        const tableMerekKendaraan = {
+          ...merekKendaraan,
+          data: merekKendaraan.data.slice(0, 5),
+        };
+        const tableNegaraAsal = {
+          ...negaraAsal,
+          data: negaraAsal.data.slice(0, 5),
+        };
+        const tableTypeKendaraan = {
+          ...typeKendaraan,
+          data: typeKendaraan.data.slice(0, 5),
+        };
+
+        setTableData(
+          [
+            tableJenisKendaraan,
+            tableKendaraan,
+            tableMerekKendaraan,
+            tableNegaraAsal,
+            tableTypeKendaraan,
+          ].sort((a, b) => a.title.localeCompare(b.title))
+        );
+        isFetched.current = true; // Ini harus ada untuk menghindari fetch berulang
+      }
+      setIsLoading(false);
     };
 
     if (!isFetched.current) {
-      fetchCardData("kendaraan");
-      fetchCardData("negara-asal");
-      fetchCardData("type-kendaraan");
-      fetchCardData("jenis-kendaraan");
-      fetchCardData("merk-kendaraan");
-      fetchTableData("kendaraan");
-      fetchTableData("merk-kendaraan");
-      fetchTableData("negara-asal");
-      fetchTableData("type-kendaraan");
-      fetchTableData("jenis-kendaraan");
-      isFetched.current = true;
+      fetchData();
     }
-  }, []);
+  });
 
   return (
     <div className="flex flex-col gap-8 items-center justify-center lg:items-stretch lg:justify-normal pb-8">
@@ -73,6 +96,30 @@ const DashboardPage = () => {
       </div>
     </div>
   );
+  // return (
+  //   <div className="flex flex-col gap-8 items-center justify-center lg:items-stretch lg:justify-normal pb-8">
+  //     {isLoading ? (
+  //       <div className="flex items-center justify-center h-96">
+  //         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
+  //       </div>
+  //     ) : (
+  //       <>
+  // <div className="flex flex-col lg:flex-row lg:flex-shrink lg:gap-4 px-16">
+  //   {cardData.map((item, index) => (
+  //     <DashboardCard key={index} size={item.size} title={item.title} />
+  //   ))}
+  // </div>
+  // <div className="flex flex-col items-center justify-center lg:flex-row lg:flex-wrap lg:gap-4 px-16">
+  //   {tableData.map((item, index) => (
+  //     <div className="flex-grow flex-shrink w-full sm:max-w-sm lg:w-auto md:max-w-screen-md lg:max-w-none">
+  //       <DashboardTable key={index} title={item.title} data={item.data} />
+  //     </div>
+  //           ))}
+  //         </div>
+  //       </>
+  //     )}
+  //   </div>
+  // );
 };
 
 export default DashboardPage;

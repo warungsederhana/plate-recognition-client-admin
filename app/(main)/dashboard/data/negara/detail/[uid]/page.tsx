@@ -31,11 +31,16 @@ const DetailNegaraPage = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
   const [dataNegara, setDataNegara] = useState<DataNegara>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDataNegara = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/negara-asal/${params.uid}`);
+        const response = await axios.get(`http://localhost:3344/api/negara-asal/${params.uid}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setDataNegara(response.data.data);
       } catch (error) {
         console.error("Error fetching data negara:", error);
@@ -52,7 +57,12 @@ const DetailNegaraPage = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/negara-asal/${dataNegara?.uid}`
+        `http://localhost:3344/api/negara-asal/${dataNegara?.uid}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       );
       if (
         response.status === 201 ||

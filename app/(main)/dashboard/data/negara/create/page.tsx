@@ -25,6 +25,7 @@ const CreateNegaraPage = () => {
     nama_negara: "",
     kode_negara: "",
   });
+  const token = localStorage.getItem("access_token");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -75,7 +76,11 @@ const CreateNegaraPage = () => {
   const handleSubmit = async () => {
     if (validate()) {
       try {
-        const response = await axios.post("http://localhost:3344/api/negara-asal", negara);
+        const response = await axios.post("http://localhost:3344/api/negara-asal", negara, {
+          headers: {
+            Authorization: token,
+          },
+        });
 
         if (
           response.status === 201 ||

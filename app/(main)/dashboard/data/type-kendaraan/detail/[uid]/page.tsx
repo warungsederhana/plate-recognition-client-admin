@@ -24,7 +24,7 @@ interface DataTypeKendaraan {
   nama_type_kendaraan_eri: string;
   nama_type_kendaraan: string;
   id_jenis_kendaraan: string;
-  id_merk_kendaraan: string;
+  id_merek_kendaraan: string;
   kode_negara_asal: string;
   createdAt: string;
   updatedAt: string;
@@ -34,11 +34,16 @@ const DetailTypeKendaraan = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
   const [dataTypeKendaraan, setDataTypeKendaraan] = useState<DataTypeKendaraan>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDataTypeKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/type-kendaraan/${params.uid}`);
+        const response = await axios.get(`http://localhost:3344/api/type-kendaraan/${params.uid}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setDataTypeKendaraan(response.data.data);
       } catch (error) {
         console.error("Error fetching data type kendaraan:", error);
@@ -55,7 +60,12 @@ const DetailTypeKendaraan = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/type-kendaraan/${dataTypeKendaraan?.uid}`
+        `http://localhost:3344/api/type-kendaraan/${dataTypeKendaraan?.uid}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       );
       if (
         response.status === 201 ||
@@ -168,10 +178,10 @@ const DetailTypeKendaraan = ({ params }: { params: { uid: string } }) => {
 
                   <div className="w-full flex flex-col gap-1">
                     <Typography color="black" variant="paragraph" placeholder={undefined}>
-                      Id Merk Kendaraan:
+                      Id Merek Kendaraan:
                     </Typography>
                     <Input
-                      value={dataTypeKendaraan.id_merk_kendaraan}
+                      value={dataTypeKendaraan.id_merek_kendaraan}
                       disabled
                       size="md"
                       placeholder="ID"

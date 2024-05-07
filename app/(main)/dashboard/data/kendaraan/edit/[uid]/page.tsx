@@ -36,7 +36,7 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
     id_kelurahan: "",
     no_telp: "",
     id_jenis_kendaraan: "",
-    id_merk_kendaraan: "",
+    id_merek_kendaraan: "",
     id_type_kendaraan: "",
     id_model_kendaraan: "",
     id_jenis_map: "",
@@ -109,7 +109,7 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
     id_kelurahan: "",
     no_telp: "",
     id_jenis_kendaraan: "",
-    id_merk_kendaraan: "",
+    id_merek_kendaraan: "",
     id_type_kendaraan: "",
     id_model_kendaraan: "",
     id_jenis_map: "",
@@ -168,13 +168,18 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
     njkb: "",
   });
   const [jenisKendaraanOptions, setJenisKendaraanOptions] = useState([]);
-  const [merkKendaraanOptions, setMerkKendaraanOptions] = useState([]);
+  const [merekKendaraanOptions, setMerekKendaraanOptions] = useState([]);
   const [typeKendaraanOptions, setTypeKendaraanOptions] = useState([]);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDataKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/kendaraan/${params.uid}`);
+        const response = await axios.get(`http://localhost:3344/api/kendaraan/${params.uid}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setKendaraan(response.data.data);
       } catch (error) {
         console.error("Error fetching data kendaraan:", error);
@@ -187,7 +192,11 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
   useEffect(() => {
     // fetch jenis kendaraan options
     axios
-      .get("http://localhost:3344/api/jenis-kendaraan")
+      .get("http://localhost:3344/api/jenis-kendaraan", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
         setJenisKendaraanOptions(
           response.data.data.map((jenis: any) => ({
@@ -198,27 +207,35 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
       })
       .catch((error) => console.error("Error fetching jenis kendaraan:", error));
 
-    // fetch merk kendaraan options
+    // fetch merek kendaraan options
     axios
-      .get("http://localhost:3344/api/merk-kendaraan")
+      .get("http://localhost:3344/api/merek-kendaraan", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
-        setMerkKendaraanOptions(
-          response.data.data.map((merk: any) => ({
-            value: merk.id,
-            label: merk.nama_merk,
+        setMerekKendaraanOptions(
+          response.data.data.map((merek: any) => ({
+            value: merek.id,
+            label: merek.nama_merek,
           }))
         );
       })
-      .catch((error) => console.error("Error fetching merk kendaraan:", error));
+      .catch((error) => console.error("Error fetching merek kendaraan:", error));
 
     // fetch type kendaraan options
     axios
-      .get("http://localhost:3344/api/type-kendaraan")
+      .get("http://localhost:3344/api/type-kendaraan", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
         setTypeKendaraanOptions(
-          response.data.data.map((merk: any) => ({
-            value: merk.id,
-            label: merk.nama_type_kendaraan,
+          response.data.data.map((merek: any) => ({
+            value: merek.id,
+            label: merek.nama_type_kendaraan,
           }))
         );
       })
@@ -228,13 +245,13 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
   useEffect(() => {
     setKendaraan((prevKendaraan) => ({
       ...prevKendaraan,
-      id_model_kendaraan: `${prevKendaraan.id_jenis_kendaraan}${prevKendaraan.id_merk_kendaraan}${prevKendaraan.id_type_kendaraan}`,
+      id_model_kendaraan: `${prevKendaraan.id_jenis_kendaraan}${prevKendaraan.id_merek_kendaraan}${prevKendaraan.id_type_kendaraan}`,
     }));
     setErrors((prevErrors) => ({
       ...prevErrors,
       id_model_kendaraan: "",
     }));
-  }, [kendaraan.id_jenis_kendaraan, kendaraan.id_merk_kendaraan, kendaraan.id_type_kendaraan]);
+  }, [kendaraan.id_jenis_kendaraan, kendaraan.id_merek_kendaraan, kendaraan.id_type_kendaraan]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -333,7 +350,7 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
       id_kelurahan: "",
       no_telp: "",
       id_jenis_kendaraan: "",
-      id_merk_kendaraan: "",
+      id_merek_kendaraan: "",
       id_type_kendaraan: "",
       id_model_kendaraan: "",
       id_jenis_map: "",
@@ -437,8 +454,8 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
       newErrors.id_jenis_kendaraan = "ID jenis kendaraan harus diisi!";
       isValid = false;
     }
-    if (!kendaraan.id_merk_kendaraan) {
-      newErrors.id_merk_kendaraan = "ID merk kendaraan harus diisi!";
+    if (!kendaraan.id_merek_kendaraan) {
+      newErrors.id_merek_kendaraan = "ID merek kendaraan harus diisi!";
       isValid = false;
     }
     if (!kendaraan.id_type_kendaraan) {
@@ -649,7 +666,12 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
       try {
         const response = await axios.put(
           `http://localhost:3344/api/kendaraan/${params.uid}`,
-          kendaraan
+          kendaraan,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
         );
         if (
           response.status === 201 ||
@@ -1234,21 +1256,21 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
                   )}
                 </div>
 
-                {/* Id Merk Kendaraan */}
+                {/* Id Merek Kendaraan */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Merk Kendaraan*:
+                    ID Merek Kendaraan*:
                   </Typography>
                   <Select
-                    value={merkKendaraanOptions.find(
+                    value={merekKendaraanOptions.find(
                       (option: { value: string; label: string }) =>
-                        option.value === kendaraan.id_merk_kendaraan
+                        option.value === kendaraan.id_merek_kendaraan
                     )}
-                    options={merkKendaraanOptions}
+                    options={merekKendaraanOptions}
                     onChange={(selectedOption) =>
-                      handleSelectChange(selectedOption, "id_merk_kendaraan")
+                      handleSelectChange(selectedOption, "id_merek_kendaraan")
                     }
-                    placeholder="Pilih Merk Kendaraan"
+                    placeholder="Pilih Merek Kendaraan"
                     isSearchable
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900"
                     styles={{
@@ -1263,12 +1285,12 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
                       menuPortal: (base) => ({ ...base, zIndex: 100 }),
                     }}
                   />
-                  {errors.id_merk_kendaraan && (
+                  {errors.id_merek_kendaraan && (
                     <Typography
                       className="!text-overline pl-2 text-danger-400"
                       placeholder={undefined}
                     >
-                      {errors.id_merk_kendaraan}
+                      {errors.id_merek_kendaraan}
                     </Typography>
                   )}
                 </div>

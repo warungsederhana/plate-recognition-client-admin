@@ -33,11 +33,19 @@ const EditJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
     id_model_kendaraan: "",
     kategori_jenis: "",
   });
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDataJenisKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/jenis-kendaraan/${params.uid}`);
+        const response = await axios.get(
+          `http://localhost:3344/api/jenis-kendaraan/${params.uid}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         setJenisKendaraan(response.data.data);
       } catch (error) {
         console.error("Error fetching data jenis kendaraan:", error);
@@ -52,7 +60,15 @@ const EditJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
     let newValue = value;
 
     // Ubah input menjadi huruf kapital untuk field tertentu
-    if (["id", "id_jenis_mapping", "id_model_kendaraan", "kategori_jenis"].includes(name)) {
+    if (
+      [
+        "id",
+        "id_jenis_mapping",
+        "id_model_kendaraan",
+        "kategori_jenis",
+        "kode_jenis_kendaraan",
+      ].includes(name)
+    ) {
       newValue = value.toUpperCase();
     }
 
@@ -134,7 +150,12 @@ const EditJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
       try {
         const response = await axios.put(
           `http://localhost:3344/api/jenis-kendaraan/${params.uid}`,
-          jenisKendaraan
+          jenisKendaraan,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
         );
 
         if (

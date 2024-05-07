@@ -35,11 +35,19 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
   const [dataJenisKendaraan, setDataJenisKendaraan] = useState<DataJenisKendaraan>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDataJenisKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/jenis-kendaraan/${params.uid}`);
+        const response = await axios.get(
+          `http://localhost:3344/api/jenis-kendaraan/${params.uid}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         setDataJenisKendaraan(response.data.data);
       } catch (error) {
         console.error("Error fetching data jenis kendaraan:", error);
@@ -56,7 +64,12 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/jenis-kendaraan/${dataJenisKendaraan?.uid}`
+        `http://localhost:3344/api/jenis-kendaraan/${dataJenisKendaraan?.uid}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       );
       if (
         response.status === 201 ||

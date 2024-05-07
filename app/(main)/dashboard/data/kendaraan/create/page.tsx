@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import Select from "react-select";
 import dayjs from "dayjs";
+import "dayjs/locale/id";
+dayjs().format();
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -36,7 +38,7 @@ const CreateKendaraanPage = () => {
     id_kelurahan: "",
     no_telp: "",
     id_jenis_kendaraan: "",
-    id_merk_kendaraan: "",
+    id_merek_kendaraan: "",
     id_type_kendaraan: "",
     id_model_kendaraan: "",
     id_jenis_map: "",
@@ -109,7 +111,7 @@ const CreateKendaraanPage = () => {
     id_kelurahan: "",
     no_telp: "",
     id_jenis_kendaraan: "",
-    id_merk_kendaraan: "",
+    id_merek_kendaraan: "",
     id_type_kendaraan: "",
     id_model_kendaraan: "",
     id_jenis_map: "",
@@ -168,13 +170,18 @@ const CreateKendaraanPage = () => {
     njkb: "",
   });
   const [jenisKendaraanOptions, setJenisKendaraanOptions] = useState([]);
-  const [merkKendaraanOptions, setMerkKendaraanOptions] = useState([]);
+  const [merekKendaraanOptions, setMerekKendaraanOptions] = useState([]);
   const [typeKendaraanOptions, setTypeKendaraanOptions] = useState([]);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     // fetch jenis kendaraan options
     axios
-      .get("http://localhost:3344/api/jenis-kendaraan")
+      .get("http://localhost:3344/api/jenis-kendaraan", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
         setJenisKendaraanOptions(
           response.data.data.map((jenis: any) => ({
@@ -185,27 +192,35 @@ const CreateKendaraanPage = () => {
       })
       .catch((error) => console.error("Error fetching jenis kendaraan:", error));
 
-    // fetch merk kendaraan options
+    // fetch merek kendaraan options
     axios
-      .get("http://localhost:3344/api/merk-kendaraan")
+      .get("http://localhost:3344/api/merek-kendaraan", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
-        setMerkKendaraanOptions(
-          response.data.data.map((merk: any) => ({
-            value: merk.id,
-            label: merk.nama_merk,
+        setMerekKendaraanOptions(
+          response.data.data.map((merek: any) => ({
+            value: merek.id,
+            label: merek.nama_merek,
           }))
         );
       })
-      .catch((error) => console.error("Error fetching merk kendaraan:", error));
+      .catch((error) => console.error("Error fetching merek kendaraan:", error));
 
     // fetch type kendaraan options
     axios
-      .get("http://localhost:3344/api/type-kendaraan")
+      .get("http://localhost:3344/api/type-kendaraan", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((response) => {
         setTypeKendaraanOptions(
-          response.data.data.map((merk: any) => ({
-            value: merk.id,
-            label: merk.nama_type_kendaraan,
+          response.data.data.map((merek: any) => ({
+            value: merek.id,
+            label: merek.nama_type_kendaraan,
           }))
         );
       })
@@ -215,13 +230,13 @@ const CreateKendaraanPage = () => {
   useEffect(() => {
     setKendaraan((prevKendaraan) => ({
       ...prevKendaraan,
-      id_model_kendaraan: `${prevKendaraan.id_jenis_kendaraan}${prevKendaraan.id_merk_kendaraan}${prevKendaraan.id_type_kendaraan}`,
+      id_model_kendaraan: `${prevKendaraan.id_jenis_kendaraan}${prevKendaraan.id_merek_kendaraan}${prevKendaraan.id_type_kendaraan}`,
     }));
     setErrors((prevErrors) => ({
       ...prevErrors,
       id_model_kendaraan: "",
     }));
-  }, [kendaraan.id_jenis_kendaraan, kendaraan.id_merk_kendaraan, kendaraan.id_type_kendaraan]);
+  }, [kendaraan.id_jenis_kendaraan, kendaraan.id_merek_kendaraan, kendaraan.id_type_kendaraan]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -320,7 +335,7 @@ const CreateKendaraanPage = () => {
       id_kelurahan: "",
       no_telp: "",
       id_jenis_kendaraan: "",
-      id_merk_kendaraan: "",
+      id_merek_kendaraan: "",
       id_type_kendaraan: "",
       id_model_kendaraan: "",
       id_jenis_map: "",
@@ -435,10 +450,10 @@ const CreateKendaraanPage = () => {
       isValid = false;
       console.log(`id jenis kendaraan ${isValid}`);
     }
-    if (!kendaraan.id_merk_kendaraan) {
-      newErrors.id_merk_kendaraan = "ID merk kendaraan harus diisi!";
+    if (!kendaraan.id_merek_kendaraan) {
+      newErrors.id_merek_kendaraan = "ID merek kendaraan harus diisi!";
       isValid = false;
-      console.log(`id merk kendaraan ${isValid}`);
+      console.log(`id merek kendaraan ${isValid}`);
     }
     if (!kendaraan.id_type_kendaraan) {
       newErrors.id_type_kendaraan = "ID tipe kendaraan harus diisi!";
@@ -695,7 +710,11 @@ const CreateKendaraanPage = () => {
     console.log(validate());
     if (validate()) {
       try {
-        const response = await axios.post("http://localhost:3344/api/kendaraan", kendaraan);
+        const response = await axios.post("http://localhost:3344/api/kendaraan", kendaraan, {
+          headers: {
+            Authorization: token,
+          },
+        });
         if (
           response.status === 201 ||
           response.statusText === "Created" ||
@@ -1274,17 +1293,17 @@ const CreateKendaraanPage = () => {
                   )}
                 </div>
 
-                {/* Id Merk Kendaraan */}
+                {/* Id Merek Kendaraan */}
                 <div className="flex flex-col gap-1 w-full">
                   <Typography color="black" variant="paragraph" placeholder={undefined}>
-                    ID Merk Kendaraan*:
+                    ID Merek Kendaraan*:
                   </Typography>
                   <Select
-                    options={merkKendaraanOptions}
+                    options={merekKendaraanOptions}
                     onChange={(selectedOption) =>
-                      handleSelectChange(selectedOption, "id_merk_kendaraan")
+                      handleSelectChange(selectedOption, "id_merek_kendaraan")
                     }
-                    placeholder="Pilih Merk Kendaraan"
+                    placeholder="Pilih Merek Kendaraan"
                     isSearchable
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900"
                     styles={{
@@ -1299,12 +1318,12 @@ const CreateKendaraanPage = () => {
                       menuPortal: (base) => ({ ...base, zIndex: 100 }),
                     }}
                   />
-                  {errors.id_merk_kendaraan && (
+                  {errors.id_merek_kendaraan && (
                     <Typography
                       className="!text-overline pl-2 text-danger-400"
                       placeholder={undefined}
                     >
-                      {errors.id_merk_kendaraan}
+                      {errors.id_merek_kendaraan}
                     </Typography>
                   )}
                 </div>
@@ -2399,7 +2418,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_faktur}
+                    value={dayjs(kendaraan.tanggal_faktur, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_faktur")}
                   />
                   {errors.tanggal_faktur && (
@@ -2419,7 +2438,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_kwitansi}
+                    value={dayjs(kendaraan.tanggal_kwitansi, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_kwitansi")}
                   />
                   {errors.tanggal_kwitansi && (
@@ -2439,7 +2458,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_akhir_stnk}
+                    value={dayjs(kendaraan.tanggal_akhir_stnk, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_akhir_stnk")}
                   />
                   {errors.tanggal_akhir_stnk && (
@@ -2461,7 +2480,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_akhir_stnk_lama}
+                    value={dayjs(kendaraan.tanggal_akhir_stnk_lama, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_akhir_stnk_lama")}
                   />
                   {errors.tanggal_akhir_stnk_lama && (
@@ -2481,7 +2500,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_jatuh_tempo}
+                    value={dayjs(kendaraan.tanggal_jatuh_tempo, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo")}
                   />
                   {errors.tanggal_jatuh_tempo && (
@@ -2501,7 +2520,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_jatuh_tempo_lama}
+                    value={dayjs(kendaraan.tanggal_jatuh_tempo_lama, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo_lama")}
                   />
                   {errors.tanggal_jatuh_tempo_lama && (
@@ -2523,7 +2542,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_daftar}
+                    value={dayjs(kendaraan.tanggal_daftar, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_daftar")}
                   />
                   {errors.tanggal_daftar && (
@@ -2543,7 +2562,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_bayar}
+                    value={dayjs(kendaraan.tanggal_bayar, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_bayar")}
                   />
                   {errors.tanggal_bayar && (
@@ -2563,7 +2582,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_jatuh_tempo_dpwkp}
+                    value={dayjs(kendaraan.tanggal_jatuh_tempo_dpwkp, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_jatuh_tempo_dpwkp")}
                   />
                   {errors.tanggal_jatuh_tempo_dpwkp && (
@@ -2585,7 +2604,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_max_bayar_pkb}
+                    value={dayjs(kendaraan.tanggal_max_bayar_pkb, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_pkb")}
                   />
                   {errors.tanggal_max_bayar_pkb && (
@@ -2605,7 +2624,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_max_bayar_swdkllj}
+                    value={dayjs(kendaraan.tanggal_max_bayar_swdkllj, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_swdkllj")}
                   />
                   {errors.tanggal_max_bayar_swdkllj && (
@@ -2625,7 +2644,7 @@ const CreateKendaraanPage = () => {
                   </Typography>
                   <DatePicker
                     className="w-full lg:w-96 !border-t-blue-gray-200 focus:!border-t-gray-900 "
-                    value={kendaraan.tanggal_max_bayar_bbn}
+                    value={dayjs(kendaraan.tanggal_max_bayar_bbn, "DD/MM/YYYY")}
                     onChange={(newValue) => handleDateChange(newValue, "tanggal_max_bayar_bbn")}
                   />
                   {errors.tanggal_max_bayar_bbn && (

@@ -91,7 +91,7 @@ const Sidebar = () => {
               <ListItemPrefix placeholder={undefined}>
                 <WrenchIcon className="h-5 w-5" strokeWidth={1.5} />
               </ListItemPrefix>
-              Merk Kendaraan
+              Merek Kendaraan
             </ListItem>
           </Link>
           <Link href={"/dashboard/data/type-kendaraan"}>
