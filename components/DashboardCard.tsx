@@ -23,7 +23,9 @@ const DashboardCard = (props: DashboardCardProps) => {
           {props.title}
         </Typography>
       </CardBody>
-      <CardFooter className="pt-0" placeholder={undefined} children={undefined}></CardFooter>
+      <CardFooter className="pt-0" placeholder={undefined}>
+        {undefined}
+      </CardFooter>
     </Card>
   );
 };

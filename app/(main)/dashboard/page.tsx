@@ -89,7 +89,10 @@ const DashboardPage = () => {
       </div>
       <div className="flex flex-col items-center justify-center lg:flex-row lg:flex-wrap lg:gap-4 px-16">
         {tableData.map((item, index) => (
-          <div className="flex-grow flex-shrink w-full sm:max-w-sm lg:w-auto md:max-w-screen-md lg:max-w-none">
+          <div
+            key={index}
+            className="flex-grow flex-shrink w-full sm:max-w-sm lg:w-auto md:max-w-screen-md lg:max-w-none"
+          >
             <DashboardTable key={index} title={item.title} data={item.data} />
           </div>
         ))}
