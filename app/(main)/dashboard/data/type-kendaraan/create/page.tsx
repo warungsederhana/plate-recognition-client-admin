@@ -270,14 +270,17 @@ const CreateTypeKendaraanPage = () => {
                     className={`${inputClass}`}
                     menuPortalTarget={document.body}
                     styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        borderColor: state.isFocused ? "#1f2937" : base.borderColor,
-                        boxShadow: state.isFocused ? "0 0 0 1px #1f2937" : base.boxShadow,
-                        "&:hover": {
-                          borderColor: state.isFocused ? "#1f2937" : base["&:hover"]?.borderColor,
-                        },
-                      }),
+                      control: (base, state) => {
+                        const borderColor = state.isFocused ? "#1f2937" : base.borderColor;
+                        return {
+                          ...base,
+                          borderColor: borderColor,
+                          boxShadow: state.isFocused ? "0 0 0 1px #1f2937" : base.boxShadow,
+                          "&:hover": {
+                            borderColor: borderColor,
+                          },
+                        };
+                      },
                       menuPortal: (base) => ({ ...base, zIndex: 100 }),
                     }}
                   />
@@ -359,14 +362,17 @@ const CreateTypeKendaraanPage = () => {
                     className={`${inputClass}`}
                     menuPortalTarget={document.body}
                     styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        borderColor: state.isFocused ? "#1f2937" : base.borderColor,
-                        boxShadow: state.isFocused ? "0 0 0 1px #1f2937" : base.boxShadow,
-                        "&:hover": {
-                          borderColor: state.isFocused ? "#1f2937" : base["&:hover"]?.borderColor,
-                        },
-                      }),
+                      control: (base, state) => {
+                        const borderColor = state.isFocused ? "#1f2937" : base.borderColor;
+                        return {
+                          ...base,
+                          borderColor: borderColor,
+                          boxShadow: state.isFocused ? "0 0 0 1px #1f2937" : base.boxShadow,
+                          "&:hover": {
+                            borderColor: borderColor,
+                          },
+                        };
+                      },
                       menuPortal: (base) => ({ ...base, zIndex: 100 }),
                     }}
                   />
@@ -392,14 +398,17 @@ const CreateTypeKendaraanPage = () => {
                     className={`${inputClass}`}
                     menuPortalTarget={document.body}
                     styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        borderColor: state.isFocused ? "#1f2937" : base.borderColor,
-                        boxShadow: state.isFocused ? "0 0 0 1px #1f2937" : base.boxShadow,
-                        "&:hover": {
-                          borderColor: state.isFocused ? "#1f2937" : base["&:hover"]?.borderColor,
-                        },
-                      }),
+                      control: (base, state) => {
+                        const borderColor = state.isFocused ? "#1f2937" : base.borderColor;
+                        return {
+                          ...base,
+                          borderColor: borderColor,
+                          boxShadow: state.isFocused ? "0 0 0 1px #1f2937" : base.boxShadow,
+                          "&:hover": {
+                            borderColor: borderColor,
+                          },
+                        };
+                      },
                       menuPortal: (base) => ({ ...base, zIndex: 100 }),
                     }}
                   />
