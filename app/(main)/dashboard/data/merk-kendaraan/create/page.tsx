@@ -40,7 +40,6 @@ const CreateMerkKendaraanPage = () => {
             Authorization: token,
           },
         });
-        console.log(response);
         setDbKodeNegaraAsal(
           response.data.data.map((negara: any) => ({
             value: negara.kode_negara,
@@ -233,7 +232,7 @@ const CreateMerkKendaraanPage = () => {
                   onChange={handleChangeSelect}
                   placeholder="Pilih Kode Negara Asal"
                   isSearchable
-                  menuPortalTarget={document.body}
+                  menuPortalTarget={typeof document !== "undefined" ? document.body : null}
                   styles={{
                     menuPortal: (base) => ({ ...base, zIndex: 100 }),
                   }}

@@ -270,7 +270,7 @@ const CreateTypeKendaraanPage = () => {
                     placeholder="Pilih Kode Negara Asal"
                     isSearchable
                     className={`${inputClass}`}
-                    menuPortalTarget={document.body}
+                    menuPortalTarget={typeof document !== "undefined" ? document.body : null}
                     styles={{
                       control: (base, state) => {
                         const borderColor = state.isFocused ? "#1f2937" : base.borderColor;
@@ -362,7 +362,7 @@ const CreateTypeKendaraanPage = () => {
                     placeholder="Pilih Jenis Kendaraan"
                     isSearchable
                     className={`${inputClass}`}
-                    menuPortalTarget={document.body}
+                    menuPortalTarget={typeof document !== "undefined" ? document.body : null}
                     styles={{
                       control: (base, state) => {
                         const borderColor = state.isFocused ? "#1f2937" : base.borderColor;
@@ -398,7 +398,7 @@ const CreateTypeKendaraanPage = () => {
                     placeholder="Pilih Merek Kendaraan"
                     isSearchable
                     className={`${inputClass}`}
-                    menuPortalTarget={document.body}
+                    menuPortalTarget={typeof document !== "undefined" ? document.body : null}
                     styles={{
                       control: (base, state) => {
                         const borderColor = state.isFocused ? "#1f2937" : base.borderColor;
