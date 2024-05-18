@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import axios, { AxiosError } from "axios";
+import { parseCookies } from "nookies";
 import {
   Card,
   CardHeader,
@@ -35,7 +36,8 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const [jenisKendaraanOptions, setJenisKendaraanOptions] = useState([]);
   const [merekKendaraanOptions, setMerekKendaraanOptions] = useState([]);
   const [negaraAsalOptions, setNegaraAsalOptions] = useState([]);
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
     const fetchDataTypeKendaraan = async () => {
@@ -52,7 +54,7 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
     };
 
     fetchDataTypeKendaraan();
-  }, [params.uid]);
+  }, [params.uid, token]);
 
   useEffect(() => {
     // Fetch jenis kendaraan options
@@ -105,7 +107,7 @@ const EditTypeKendaraanPage = ({ params }: { params: { uid: string } }) => {
         );
       })
       .catch((error) => console.error("Error fetching negara asal:", error));
-  }, [params.uid]);
+  }, [params.uid, token]);
 
   const handleSelectChange = (selectedOption: any, field: any) => {
     setTypeKendaraan({

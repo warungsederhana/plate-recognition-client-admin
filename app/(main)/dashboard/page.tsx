@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { parseCookies } from "nookies";
 import DashboardTable from "../../../components/DashboardTable";
 import DashboardCard from "../../../components/DashboardCard";
 
@@ -15,10 +16,10 @@ const DashboardPage = () => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const isFetched = useRef(false);
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-
     const fetchData = async () => {
       setIsLoading(true);
       if (!isFetched.current) {
@@ -78,7 +79,7 @@ const DashboardPage = () => {
     if (!isFetched.current) {
       fetchData();
     }
-  });
+  }, [token]);
 
   return (
     <div className="flex flex-col gap-8 items-center justify-center lg:items-stretch lg:justify-normal pb-8">

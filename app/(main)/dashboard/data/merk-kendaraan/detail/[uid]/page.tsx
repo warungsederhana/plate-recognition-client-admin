@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { parseCookies } from "nookies";
 import axios from "axios";
 import {
   Card,
@@ -31,7 +32,8 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
   const [dataMerekKendaraan, setDataMerekKendaraan] = useState<DataMerkKendaraan>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
     const fetchDataMerekKendaraan = async () => {
@@ -51,7 +53,7 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
     };
 
     fetchDataMerekKendaraan();
-  }, [params.uid]);
+  }, [params.uid, token]);
 
   const handleEdit = () => {
     router.push(`/dashboard/data/merk-kendaraan/edit/${params.uid}`);

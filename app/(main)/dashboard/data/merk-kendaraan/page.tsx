@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { parseCookies } from "nookies";
 import DataTable from "../../../../../components/DataTable";
 import { toast } from "react-toastify";
 
@@ -9,7 +10,8 @@ const DataMerkKendaraanPage = () => {
   const [dataMerekKendaraan, setDataMerekKendaraan] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
   const KEY = ["id", "nama_merek", "kode_negara_asal"];
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   const router = useRouter();
 
@@ -60,7 +62,7 @@ const DataMerkKendaraanPage = () => {
     };
 
     fetchDataMerekKendaraan();
-  }, []);
+  }, [token]);
   return (
     <>
       <div className="pt-6 px-16">

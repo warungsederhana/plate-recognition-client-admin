@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { parseCookies } from "nookies";
 import DataTable from "../../../../../components/DataTable";
 
 const JenisKendaraanPage = () => {
@@ -16,7 +17,8 @@ const JenisKendaraanPage = () => {
     "id_model_kendaraan",
     "kategori_jenis",
   ];
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
   const router = useRouter();
 
   const handleSearch = (nama_jenis: string) => {
@@ -66,7 +68,7 @@ const JenisKendaraanPage = () => {
     };
 
     fetchDataJenisKendaraan();
-  }, []);
+  }, [token]);
   return (
     <>
       <div className="pt-6 px-16">

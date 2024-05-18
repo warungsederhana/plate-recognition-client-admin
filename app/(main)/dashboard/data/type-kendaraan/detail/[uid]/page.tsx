@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { parseCookies } from "nookies";
 import {
   Card,
   CardHeader,
@@ -34,7 +35,8 @@ const DetailTypeKendaraan = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
   const [dataTypeKendaraan, setDataTypeKendaraan] = useState<DataTypeKendaraan>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
     const fetchDataTypeKendaraan = async () => {
@@ -51,7 +53,7 @@ const DetailTypeKendaraan = ({ params }: { params: { uid: string } }) => {
     };
 
     fetchDataTypeKendaraan();
-  }, [params.uid]);
+  }, [params.uid, token]);
 
   const handleEdit = () => {
     router.push(`/dashboard/data/type-kendaraan/edit/${params.uid}`);

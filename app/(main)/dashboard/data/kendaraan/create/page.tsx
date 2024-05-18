@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
+import { parseCookies } from "nookies";
 import Select from "react-select";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
@@ -172,7 +173,8 @@ const CreateKendaraanPage = () => {
   const [jenisKendaraanOptions, setJenisKendaraanOptions] = useState([]);
   const [merekKendaraanOptions, setMerekKendaraanOptions] = useState([]);
   const [typeKendaraanOptions, setTypeKendaraanOptions] = useState([]);
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
     // fetch jenis kendaraan options
@@ -225,7 +227,7 @@ const CreateKendaraanPage = () => {
         );
       })
       .catch((error) => console.error("Error fetching type kendaraan:", error));
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     setKendaraan((prevKendaraan) => ({

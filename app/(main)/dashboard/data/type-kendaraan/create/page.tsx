@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import axios, { AxiosError } from "axios";
+import { parseCookies } from "nookies";
 import {
   Card,
   CardHeader,
@@ -35,7 +36,8 @@ const CreateTypeKendaraanPage = () => {
   const [jenisKendaraanOptions, setJenisKendaraanOptions] = useState([]);
   const [merekKendaraanOptions, setMerekKendaraanOptions] = useState([]);
   const [negaraAsalOptions, setNegaraAsalOptions] = useState([]);
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
     // Fetch jenis kendaraan options
@@ -88,7 +90,7 @@ const CreateTypeKendaraanPage = () => {
         );
       })
       .catch((error) => console.error("Error fetching negara asal:", error));
-  }, []);
+  }, [token]);
 
   const handleSelectChange = (selectedOption: any, field: any) => {
     setTypeKendaraan({

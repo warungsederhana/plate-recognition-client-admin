@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { parseCookies } from "nookies";
 import DataTable from "../../../../../components/DataTable";
 import { toast } from "react-toastify";
 
@@ -10,7 +11,8 @@ const DataNegaraPage = () => {
   const [search, setSearch] = useState<string>("");
   const KEY = ["id", "nama_negara", "kode_negara"];
   const router = useRouter();
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   const handleSearch = (nama_negara: string) => {
     setSearch(nama_negara);
@@ -62,7 +64,7 @@ const DataNegaraPage = () => {
 
     // Memanggil fetchDataNegara setiap kali nilai 'search' berubah
     fetchDataNegara();
-  }, []); // Tambahkan 'search' sebagai dependency
+  }, [token]); // Tambahkan 'search' sebagai dependency
 
   return (
     <>

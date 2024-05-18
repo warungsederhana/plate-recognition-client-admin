@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
+import { parseCookies } from "nookies";
 import {
   Card,
   CardHeader,
@@ -25,7 +26,8 @@ const CreateNegaraPage = () => {
     nama_negara: "",
     kode_negara: "",
   });
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

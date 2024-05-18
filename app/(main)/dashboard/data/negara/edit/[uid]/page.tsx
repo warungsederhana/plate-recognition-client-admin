@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
+import { parseCookies } from "nookies";
 import {
   Card,
   CardHeader,
@@ -25,7 +26,8 @@ const EditNegaraPage = ({ params }: { params: { uid: string } }) => {
     nama_negara: "",
     kode_negara: "",
   });
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
     const fetchDataNegara = async () => {
@@ -41,7 +43,7 @@ const EditNegaraPage = ({ params }: { params: { uid: string } }) => {
       }
     };
     fetchDataNegara();
-  }, [params.uid]);
+  }, [params.uid, token]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

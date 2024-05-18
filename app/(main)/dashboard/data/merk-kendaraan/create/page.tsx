@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import axios, { AxiosError } from "axios";
+import { parseCookies } from "nookies";
 import {
   Card,
   CardHeader,
@@ -28,7 +29,8 @@ const CreateMerkKendaraanPage = () => {
   });
   const [db_kode_negara_asal, setDbKodeNegaraAsal] = useState([]);
   const isFetched = useRef(false);
-  const token = localStorage.getItem("access_token");
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +57,7 @@ const CreateMerkKendaraanPage = () => {
       fetchData();
       isFetched.current = true;
     }
-  }, []);
+  }, [token]);
 
   const handleChangeSelect = (selectedOption: any) => {
     setMerekKendaraan({

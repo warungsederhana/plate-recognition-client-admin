@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { parseCookies } from "nookies";
 import axios from "axios";
 import DataTable from "../../../../../components/DataTable";
 
@@ -81,9 +82,10 @@ const KendaraanPage = () => {
     "njkb",
   ];
   const router = useRouter();
+  const cookies = parseCookies();
+  const token = `Bearer ${cookies.access_token}`;
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
     const fetchDataKendaraan = async () => {
       const res = await axios.get(`http://localhost:3344/api/kendaraan/`, {
         headers: {
@@ -100,7 +102,7 @@ const KendaraanPage = () => {
     };
 
     fetchDataKendaraan();
-  }, []);
+  }, [token]);
 
   const handleSearch = (nama_kendaraan: string) => {
     setSearch(nama_kendaraan);
