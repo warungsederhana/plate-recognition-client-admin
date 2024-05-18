@@ -29,7 +29,7 @@ interface DataMerkKendaraan {
 
 const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const router = useRouter();
-  const [dataMerekKendaraan, setDataMerekKendaraan] = useState<DataMerekKendaraan>();
+  const [dataMerekKendaraan, setDataMerekKendaraan] = useState<DataMerkKendaraan>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const token = localStorage.getItem("access_token");
 
