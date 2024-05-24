@@ -38,11 +38,14 @@ const DetailNegaraPage = ({ params }: { params: { uid: string } }) => {
   useEffect(() => {
     const fetchDataNegara = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/negara-asal/${params.uid}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await axios.get(
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/negara-asal/${params.uid}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         setDataNegara(response.data.data);
       } catch (error) {
         console.error("Error fetching data negara:", error);
@@ -59,7 +62,7 @@ const DetailNegaraPage = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/negara-asal/${dataNegara?.uid}`,
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/negara-asal/${dataNegara?.uid}`,
         {
           headers: {
             Authorization: token,

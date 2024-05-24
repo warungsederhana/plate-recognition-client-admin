@@ -179,7 +179,7 @@ const CreateKendaraanPage = () => {
   useEffect(() => {
     // fetch jenis kendaraan options
     axios
-      .get("http://localhost:3344/api/jenis-kendaraan", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan", {
         headers: {
           Authorization: token,
         },
@@ -196,7 +196,7 @@ const CreateKendaraanPage = () => {
 
     // fetch merek kendaraan options
     axios
-      .get("http://localhost:3344/api/merek-kendaraan", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/merek-kendaraan", {
         headers: {
           Authorization: token,
         },
@@ -213,7 +213,7 @@ const CreateKendaraanPage = () => {
 
     // fetch type kendaraan options
     axios
-      .get("http://localhost:3344/api/type-kendaraan", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/type-kendaraan", {
         headers: {
           Authorization: token,
         },
@@ -712,11 +712,15 @@ const CreateKendaraanPage = () => {
     console.log(validate());
     if (validate()) {
       try {
-        const response = await axios.post("http://localhost:3344/api/kendaraan", kendaraan, {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await axios.post(
+          "https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/kendaraan",
+          kendaraan,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         if (
           response.status === 201 ||
           response.statusText === "Created" ||

@@ -43,7 +43,7 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
     const fetchDataJenisKendaraan = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3344/api/jenis-kendaraan/${params.uid}`,
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan/${params.uid}`,
           {
             headers: {
               Authorization: token,
@@ -66,7 +66,7 @@ const DetailJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/jenis-kendaraan/${dataJenisKendaraan?.uid}`,
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan/${dataJenisKendaraan?.uid}`,
         {
           headers: {
             Authorization: token,

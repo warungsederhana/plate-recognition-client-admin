@@ -39,7 +39,7 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
     const fetchDataMerekKendaraan = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3344/api/merek-kendaraan/${params.uid}`,
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/merek-kendaraan/${params.uid}`,
           {
             headers: {
               Authorization: token,
@@ -62,7 +62,7 @@ const DetailMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/merek-kendaraan/${dataMerekKendaraan?.uid}`,
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/merek-kendaraan/${dataMerekKendaraan?.uid}`,
         {
           headers: {
             Authorization: token,

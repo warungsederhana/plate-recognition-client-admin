@@ -35,11 +35,14 @@ const CreateMerkKendaraanPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3344/api/negara-asal", {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await axios.get(
+          "https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/negara-asal",
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         setDbKodeNegaraAsal(
           response.data.data.map((negara: any) => ({
             value: negara.kode_negara,
@@ -115,7 +118,7 @@ const CreateMerkKendaraanPage = () => {
       console.log(merekKendaraan.kode_negara_asal);
       try {
         const response = await axios.post(
-          "http://localhost:3344/api/merek-kendaraan",
+          "https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/merek-kendaraan",
           merekKendaraan,
           {
             headers: {

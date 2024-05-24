@@ -42,7 +42,7 @@ const CreateTypeKendaraanPage = () => {
   useEffect(() => {
     // Fetch jenis kendaraan options
     axios
-      .get("http://localhost:3344/api/jenis-kendaraan", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan", {
         headers: {
           Authorization: token,
         },
@@ -59,7 +59,7 @@ const CreateTypeKendaraanPage = () => {
 
     // Fetch merek kendaraan options
     axios
-      .get("http://localhost:3344/api/merek-kendaraan", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/merek-kendaraan", {
         headers: {
           Authorization: token,
         },
@@ -76,7 +76,7 @@ const CreateTypeKendaraanPage = () => {
 
     // Fetch negara asal options
     axios
-      .get("http://localhost:3344/api/negara-asal", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/negara-asal", {
         headers: {
           Authorization: token,
         },
@@ -176,7 +176,7 @@ const CreateTypeKendaraanPage = () => {
     if (validate()) {
       try {
         const response = await axios.post(
-          "http://localhost:3344/api/type-kendaraan",
+          "https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/type-kendaraan",
           typeKendaraan,
           {
             headers: {

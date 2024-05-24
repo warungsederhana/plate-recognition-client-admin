@@ -177,11 +177,14 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
   useEffect(() => {
     const fetchDataKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/kendaraan/${params.uid}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await axios.get(
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/kendaraan/${params.uid}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         setKendaraan(response.data.data);
       } catch (error) {
         console.error("Error fetching data kendaraan:", error);
@@ -194,7 +197,7 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
   useEffect(() => {
     // fetch jenis kendaraan options
     axios
-      .get("http://localhost:3344/api/jenis-kendaraan", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan", {
         headers: {
           Authorization: token,
         },
@@ -211,7 +214,7 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
 
     // fetch merek kendaraan options
     axios
-      .get("http://localhost:3344/api/merek-kendaraan", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/merek-kendaraan", {
         headers: {
           Authorization: token,
         },
@@ -228,7 +231,7 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
 
     // fetch type kendaraan options
     axios
-      .get("http://localhost:3344/api/type-kendaraan", {
+      .get("https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/type-kendaraan", {
         headers: {
           Authorization: token,
         },
@@ -667,7 +670,7 @@ const EditKendaraanPage = ({ params }: { params: { uid: string } }) => {
     if (validate()) {
       try {
         const response = await axios.put(
-          `http://localhost:3344/api/kendaraan/${params.uid}`,
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/kendaraan/${params.uid}`,
           kendaraan,
           {
             headers: {

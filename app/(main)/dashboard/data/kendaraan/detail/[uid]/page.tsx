@@ -108,11 +108,14 @@ const DetailKendaraanPage = ({ params }: { params: { uid: string } }) => {
   useEffect(() => {
     const fetchDataKendaraan = async () => {
       try {
-        const response = await axios.get(`http://localhost:3344/api/kendaraan/${params.uid}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await axios.get(
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/kendaraan/${params.uid}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         setDataKendaraan(response.data.data);
       } catch (error) {
         console.error("Error fetching data kendaraan:", error);
@@ -129,7 +132,7 @@ const DetailKendaraanPage = ({ params }: { params: { uid: string } }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3344/api/kendaraan/${dataKendaraan?.uid}`,
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/kendaraan/${dataKendaraan?.uid}`,
         {
           headers: {
             Authorization: token,

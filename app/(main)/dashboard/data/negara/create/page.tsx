@@ -78,11 +78,15 @@ const CreateNegaraPage = () => {
   const handleSubmit = async () => {
     if (validate()) {
       try {
-        const response = await axios.post("http://localhost:3344/api/negara-asal", negara, {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await axios.post(
+          "https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/negara-asal",
+          negara,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
 
         if (
           response.status === 201 ||

@@ -35,11 +35,14 @@ const JenisKendaraanPage = () => {
 
   const handleDelete = async (uid: string) => {
     try {
-      await axios.delete(`http://localhost:3344/api/jenis-kendaraan/${uid}`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      await axios.delete(
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan/${uid}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       const data = dataJenisKendaraan.filter((item) => item.uid !== uid);
       setDataJenisKendaraan(data);
     } catch (error) {
@@ -53,11 +56,14 @@ const JenisKendaraanPage = () => {
 
   useEffect(() => {
     const fetchDataJenisKendaraan = async () => {
-      const res = await axios.get(`http://localhost:3344/api/jenis-kendaraan/`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan/`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
         delete item.updatedAt;

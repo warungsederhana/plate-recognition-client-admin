@@ -36,7 +36,7 @@ const EditMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
     const fetchDataMerekKendaraan = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3344/api/merek-kendaraan/${params.uid}`,
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/merek-kendaraan/${params.uid}`,
           {
             headers: {
               Authorization: token,
@@ -55,11 +55,14 @@ const EditMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3344/api/negara-asal", {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await axios.get(
+          "https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/negara-asal",
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         console.log(response);
         setDbKodeNegaraAsal(
           response.data.data.map((negara: any) => ({
@@ -136,7 +139,7 @@ const EditMerkKendaraanPage = ({ params }: { params: { uid: string } }) => {
     if (validate()) {
       try {
         const response = await axios.put(
-          `http://localhost:3344/api/merek-kendaraan/${params.uid}`,
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/merek-kendaraan/${params.uid}`,
           merekKendaraan,
           {
             headers: {

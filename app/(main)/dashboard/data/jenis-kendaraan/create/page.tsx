@@ -130,7 +130,7 @@ const CreateJenisKendaraanPage = () => {
     if (validate()) {
       try {
         const response = await axios.post(
-          "http://localhost:3344/api/jenis-kendaraan",
+          "https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan",
           jenisKendaraan,
           {
             headers: {

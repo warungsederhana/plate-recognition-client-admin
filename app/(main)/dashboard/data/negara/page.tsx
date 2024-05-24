@@ -28,11 +28,14 @@ const DataNegaraPage = () => {
 
   const handleDelete = async (uid: string) => {
     try {
-      await axios.delete(`http://localhost:3344/api/negara-asal/${uid}`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      await axios.delete(
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/negara-asal/${uid}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       const data = dataNegara.filter((item) => item.uid !== uid);
       setDataNegara(data);
       toast.success("Data berhasil dihapus.");
@@ -48,11 +51,14 @@ const DataNegaraPage = () => {
   useEffect(() => {
     const fetchDataNegara = async () => {
       // Menambahkan query pencarian ke URL
-      const res = await axios.get(`http://localhost:3344/api/negara-asal/`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/negara-asal/`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
         delete item.updatedAt;

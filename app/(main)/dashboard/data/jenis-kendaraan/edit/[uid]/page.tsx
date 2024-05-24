@@ -41,7 +41,7 @@ const EditJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
     const fetchDataJenisKendaraan = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3344/api/jenis-kendaraan/${params.uid}`,
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan/${params.uid}`,
           {
             headers: {
               Authorization: token,
@@ -151,7 +151,7 @@ const EditJenisKendaraanPage = ({ params }: { params: { uid: string } }) => {
     if (validate()) {
       try {
         const response = await axios.put(
-          `http://localhost:3344/api/jenis-kendaraan/${params.uid}`,
+          `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/jenis-kendaraan/${params.uid}`,
           jenisKendaraan,
           {
             headers: {

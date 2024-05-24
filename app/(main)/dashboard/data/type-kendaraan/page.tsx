@@ -34,11 +34,14 @@ const TypeKendaraanPage = () => {
 
   const handleDelete = async (uid: string) => {
     try {
-      await axios.delete(`http://localhost:3344/api/type-kendaraan/${uid}`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      await axios.delete(
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/type-kendaraan/${uid}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       const data = dataTypeKendaraan.filter((item) => item.uid !== uid);
       setDataTypeKendaraan(data);
     } catch (error) {
@@ -52,11 +55,14 @@ const TypeKendaraanPage = () => {
 
   useEffect(() => {
     const fetchDataTypeKendaraan = async () => {
-      const res = await axios.get(`http://localhost:3344/api/type-kendaraan/`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/type-kendaraan/`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       const data = res.data.data.map((item: any) => {
         delete item.createdAt;
         delete item.updatedAt;

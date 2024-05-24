@@ -23,11 +23,14 @@ const DashboardPage = () => {
     const fetchData = async () => {
       setIsLoading(true);
       if (!isFetched.current) {
-        const res = await axios.get("http://localhost:3344/api/main", {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const res = await axios.get(
+          "https://plate-recognition-be-oop-dzgubwy2uq-et.a.run.app/api/main",
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         const allData = res.data.data;
         const jenisKendaraan: DataItem = allData.jenisKendaraan;
         const kendaraan: DataItem = allData.kendaraan;
