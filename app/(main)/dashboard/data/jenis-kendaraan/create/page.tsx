@@ -378,6 +378,15 @@ const CreateJenisKendaraanPage = () => {
           <CardFooter placeholder={undefined}>
             <div className="flex justify-end gap-4">
               <Button
+                variant="text"
+                className="min-w-24"
+                color="blue-gray"
+                placeholder={undefined}
+                onClick={() => router.back()}
+              >
+                Batal
+              </Button>
+              <Button
                 className="bg-gradient-to-tr from-primary-500 to-primary-400"
                 onClick={handleSubmit}
                 placeholder={undefined}

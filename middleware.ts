@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serialize } from "cookie";
+import { parseCookies, destroyCookie } from "nookies";
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -43,6 +44,7 @@ export async function middleware(request: NextRequest) {
     } catch (error) {
       console.error(error);
       // Menghapus cookie jika terjadi error saat verifikasi
+      destroyCookie(null, "access_token");
       const response = NextResponse.redirect(new URL("/auth/login", request.url));
       localStorage.removeItem("access_token");
       response.headers.append(
