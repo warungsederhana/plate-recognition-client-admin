@@ -138,7 +138,7 @@ const DataTable = (props: DataTableProps) => {
           >
             <FolderPlusIcon strokeWidth={2} className="h-4 w-4" />
             <Typography variant="small" placeholder={undefined}>
-              Add {props.title.toLowerCase()}
+              Tambah {props.title.toLowerCase()}
             </Typography>
           </Button>
         </div>
